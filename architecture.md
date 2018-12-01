@@ -127,7 +127,7 @@ service (the peer interface). This situation is illustrated in
 </figure>
  
 Except at the hardware level, where peers directly communicate with each
-other over a physical mediuk, peer-to-peer communication is indirect—each
+other over a physical medium, peer-to-peer communication is indirect—each
 protocol communicates with its peer by passing messages to some
 lower-level protocol, which in turn delivers the message to *its* peer.
 In addition, there are potentially more than one protocol at any given
