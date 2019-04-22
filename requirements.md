@@ -180,6 +180,8 @@ growth of the Internet to global size and billions of nodes was the
 result of some very good design decisions by the early Internet
 architects, which we will discuss later.
 
+{% include "../sidebars/lans-and-wans.md" %}
+
 Just because a set of hosts are directly or indirectly connected to each
 other does not mean that we have succeeded in providing host-to-host
 connectivity. The final requirement is that each node must be able to

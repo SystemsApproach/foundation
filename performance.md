@@ -129,6 +129,8 @@ insignificant, however, since the former implies that the time to
 transmit a byte (`Transimt`) is 8 $$\mu$$s and the latter implies
 `Transmit` = 0.08 $$\mu$$s.
 
+{% include "../sidebars/mega.md" %}
+
 In contrast, consider a digital library program that is being asked to
 fetch a 25-megabyte (MB) image—the more bandwidth that is available,
 the faster it will be able to return the image to the user. Here, the
