@@ -433,7 +433,9 @@ exemplified by a quote on T-shirts commonly worn at IETF meetings:
 > *We reject kings, presidents, and voting. We believe in rough
 > consensus and running code.* **(David Clark)**
 
-> [!Note|style:flat|label:Key Takeaway|iconVisibility:hidden]
+<!--- [!Note|style:flat|label:Key Takeaway|iconVisibility:hidden] --->
+> **Key Takeaway**
+>
 > Of these three attributes of the Internet architecture, the hourglass
 > design philosophy is important enough to bear repeating. The hourglass's
 > narrow waist represents a minimal and carefully chosen set of global

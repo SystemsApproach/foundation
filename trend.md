@@ -77,7 +77,9 @@ partly about technology, but also partly about many other
 non-technical factors, all of which is a testament to how deeply
 embedded the Internet is in our lives.
 
-> [!NOTE|label:Broader Perspective]
+<!--- > [!NOTE|label:Broader Perspective] --->
+> **Broader Perspective**
+>
 > To continue reading about the cloudification of the Internet, see
 > [Race to the Edge](../direct/trend.md).
 >
