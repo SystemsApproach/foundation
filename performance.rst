@@ -133,7 +133,7 @@ insignificant, however, since the former implies that the time to
 transmit a byte (``Transimt``) is 8 μs and the latter implies
 ``Transmit`` = 0.08 μs.
 
-{% include "../sidebars/mega.md" %}
+.. include:: ../sidebars/mega.rst
 
 In contrast, consider a digital library program that is being asked to
 fetch a 25-megabyte (MB) image—the more bandwidth that is available, the
