@@ -1,9 +1,5 @@
-# {{ page.title }}
-
-## Problem: Building a Network
-
-> I must Create a System, or be enslav'd by another Man's; I will not
-> Reason and Compare: my business is to Create. *—William Blake*
+Problem: Building a Network
+---------------------------
 
 Suppose you want to build a computer network, one that has the potential
 to grow to global proportions and to support applications as diverse as
@@ -16,15 +12,15 @@ overriding goal of this book—to describe the available building
 materials and then to show how they can be used to construct a network
 from the ground up.
 
-Before we can understand how to design a computer network, we
-should first agree on exactly what a computer network is. At one
-time, the term *network* meant the set of serial lines used to attach
-dumb terminals to mainframe computers. Other important networks include
-the voice telephone network and the cable TV network used to disseminate
-video signals. The main things these networks have in common are that
-they are specialized to handle one particular kind of data (keystrokes,
-voice, or video) and they typically connect to special-purpose devices
-(terminals, hand receivers, and television sets).
+Before we can understand how to design a computer network, we should
+first agree on exactly what a computer network is. At one time, the term
+*network* meant the set of serial lines used to attach dumb terminals to
+mainframe computers. Other important networks include the voice
+telephone network and the cable TV network used to disseminate video
+signals. The main things these networks have in common are that they are
+specialized to handle one particular kind of data (keystrokes, voice, or
+video) and they typically connect to special-purpose devices (terminals,
+hand receivers, and television sets).
 
 What distinguishes a computer network from these other types of
 networks? Probably the most important characteristic of a computer
@@ -33,7 +29,7 @@ general-purpose programmable hardware, and they are not optimized for a
 particular application like making phone calls or delivering television
 signals. Instead, they are able to carry many different types of data,
 and they support a wide, and ever growing, range of applications.
-Today's computer networks have pretty much taken over the functions
+Today’s computer networks have pretty much taken over the functions
 previously performed by single-use networks. This chapter looks at some
 typical applications of computer networks and discusses the requirements
 that a network designer who wishes to support such applications must be
@@ -50,13 +46,13 @@ system.
 
 In addition to understanding how networks are built, it is increasingly
 important to understand how they are operated or managed and how network
-applications are developed. Almost all of us now have computer
-networks in our homes, offices, and in some cases in our cars, so
-operating networks is no longer a matter only for a few specialists.
-And with the proliferation of smartphones, many more of this
-generation are developing networked applications than in the past. So
-we need to consider networks from these multiple perspectives:
-builders, operators, application developers.
+applications are developed. Almost all of us now have computer networks
+in our homes, offices, and in some cases in our cars, so operating
+networks is no longer a matter only for a few specialists. And with the
+proliferation of smartphones, many more of this generation are
+developing networked applications than in the past. So we need to
+consider networks from these multiple perspectives: builders, operators,
+application developers.
 
 To start us on the road toward understanding how to build, operate, and
 program a network, this chapter does four things. First, it explores the
