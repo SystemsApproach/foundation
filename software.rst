@@ -1,13 +1,13 @@
 1.4 Software
 ============
 
-Network architectures and protocol specifications are essential things,
-but a good blueprint is not enough to explain the phenomenal success of
-the Internet: The number of computers connected to the Internet has
-grown exponentially for almost 3 decades (although precise numbers are
-hard to come by). The number of users of the Internet was estimated to
-be around 4.1 billion by the end of 2017—roughly half of the world’s
-population.
+Network architectures and protocol specifications are essential
+things, but a good blueprint is not enough to explain the phenomenal
+success of the Internet: The number of computers connected to the
+Internet has grown exponentially for over three decades (although
+precise numbers are hard to come by). The number of users of the
+Internet was estimated to be around 4.1 billion by the end of
+2018—roughly half of the world’s population.
 
 What explains the success of the Internet? There are certainly many
 contributing factors (including a good architecture), but one thing that
@@ -18,20 +18,21 @@ added readily with “just a small matter of programming.” As a result,
 new applications and services have been showing up at an incredible
 pace.
 
-A related factor is the massive increase in computing power available in
-commodity machines. Although computer networks have always been capable
-in principle of transporting any kind of information, such as digital
-voice samples, digitized images, and so on, this potential was not
-particularly interesting if the computers sending and receiving that
-data were too slow to do anything useful with the information. Virtually
-all of today’s computers are capable of playing back digitized audio and
-video at a speed and resolution that are quite usable.
+A related factor is the massive increase in computing power available
+in commodity machines. Although computer networks have always been
+capable in principle of transporting any kind of information, such as
+digital voice samples, digitized images, and so on, this potential was
+not particularly interesting if the computers sending and receiving
+that data were too slow to do anything useful with the
+information. Virtually all of today’s computers are capable of playing
+back digitized audio and video at a speed and resolution that are
+quite usable.
 
-In the years since the first edition of this book appeared, the writing
-of networked applications has become a much more mainstream activity and
-less a job just for a few specialists. Many factors have played into
-this, including better tools to make the job easier for nonspecialists
-and the opening up of new markets such as applications for smartphones.
+In the years since the first edition of this book appeared, the
+writing of networked applications has become a mainstream activity and
+not a job just for a few specialists. Many factors have played into
+this, including better tools to make the job easier and the opening up
+of new markets such as applications for smartphones.
 
 The point to note is that knowing how to implement network software is
 an essential part of understanding computer networks, and while the odds
@@ -68,6 +69,31 @@ this book, Linux because it is open source and C because it remains
 the language of choice for network internals. (C also has the
 advantage of exposing all the low-level details, which is helpful in
 understanding the underlying ideas.)
+
+.. sidebar:: Sockets Enable Applications
+
+	     It is hard to overstate the importance of the Socket
+	     API. It defines the demarcation point between the
+	     applications running on top of the Internet, and the
+	     details of how the Internet is implemented. As a
+	     consequence of Sockets providing a well-defined and
+	     stable interface, writing Internet applications exploded
+	     into a multi-billion dollar industry. Starting from the
+	     humble beginnings of the client/server paradigm and a
+	     handful of simple application programs (email, file
+	     transfer, remote login), everyone now has access to an
+	     never-ending supply of cloud applications from their
+	     smartphones.
+
+	     This section lays the foundation by revisiting the
+	     simplicity of a client program opening a socket so it can
+	     exchange messages with server program, but today a rich
+	     software ecosystem for building scalable applications is
+	     available. This ecosystem still runs on top of the Socket
+	     API, but it has grown to also include a plethora of
+	     cloud-based tools. We return to the interplay between the
+	     cloud and the network in each chapter, starting with the
+	     *Perspective* section at the end of Chapter 1.
 
 Before describing the socket interface, it is important to keep two
 concerns separate in your mind. Each protocol provides a certain set of
