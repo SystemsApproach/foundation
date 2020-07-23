@@ -19,8 +19,8 @@ following information:
 Read the Book
 -------------
 
-An online version of the book is published at
-`https://foundation.systemsapproach.org <https://foundation.systemsapproach.org>`__.
+This book is still coming together. It is not yet a complete draft. An
+online version of the book will eventually be published.
 
 To track progress and receive notices about new versions, you can follow
 the project on
@@ -36,8 +36,8 @@ To build a web-viewable version, you first need to download the source:
 
 .. code:: shell 
 
-   mkdir ~/5G 
-   cd ~/5G 
+   mkdir ~/foundation 
+   cd ~/foundation
    git clone https://github.com/SystemsApproach/foundation.git 
 
 The build process is stored in the Makefile and requires Python be 
