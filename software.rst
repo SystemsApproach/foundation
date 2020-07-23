@@ -1,5 +1,5 @@
-1.4 Software
-============
+Chapter 4:  Implementation
+==========================
 
 Network architectures and protocol specifications are essential
 things, but a good blueprint is not enough to explain the phenomenal
@@ -45,8 +45,8 @@ application on top of the Internet. Typically, such programs are
 simultaneously an application (i.e., designed to interact with users)
 and a protocol (i.e., communicates with peers across the network).
 
-Application Programming Interface (Sockets)
--------------------------------------------
+4.1 Application Programming Interface
+-------------------------------------
 
 The place to start when implementing a network application is the
 interface exported by the network. Since most network protocols are in
@@ -201,9 +201,6 @@ The first operation sends the given ``message`` over the specified
 specified ``socket`` into the given ``buffer``. Both operations take a
 set of ``flags`` that control certain details of the operation.
 
-Example Application
--------------------
-
 We now show the implementation of a simple client/server program that
 uses the socket interface to send messages over a TCP connection. The
 program also uses other Linux networking utilities, which we introduce as
@@ -212,8 +209,8 @@ text to a user on another machine. It is a simplified version of the
 Linux ``talk`` program, which is similar to the program at the core of
 instant messaging applications.
 
-Client
-~~~~~~
+4.1.1 Client
+~~~~~~~~~~~~
 
 We start with the client side, which takes the name of the remote
 machine as an argument. It calls the Linux utility to translate this name
@@ -290,8 +287,8 @@ sends it over the socket.
      }
    }
 
-Server
-~~~~~~
+4.1.2 Server
+~~~~~~~~~~~~
 
 The server is equally simple. It first constructs the address data
 structure by filling in its own port number (``SERVER_PORT``). By not
@@ -351,3 +348,71 @@ out the characters that arrive on the connection.
        close(new_s);
      }
    }
+
+4.2 Switches and SDN
+--------------------
+
+4.3 Cloud is the New Internet
+-----------------------------
+
+As we saw at the end of **Section 9.1**, there has been a migration of
+traditional Internet applications like email and web servers from
+machines running on-premises to VMs running in commodity clouds. This
+corresponds to a shift in terminology (from “Web Services” to “Cloud
+Services”) and in many of the underlying technologies being used (from
+Virtual Machines to Cloud Native micro-services). But the Cloud’s
+impact on how network applications are implemented today is even
+bigger than this migration suggests. It is the combination of
+commodity clouds and overlay networks (similar to those described in
+**Section 9.4**) that may eventually have the most impact.
+
+The biggest thing an overlay-based application needs to be effective is
+a wide footprint, that is, many points-of-presence around the world. IP
+routers are widely deployed, so if you have permission to use a set of
+them as the underlying nodes in your overlay network, then you’re
+good-to-go. But that’s not going to happen, as there are exactly zero
+network operators or enterprise administrators that are willing to let
+random people load overlay software onto their routers.
+
+Your next choice might be to crowdsource hosting sites for your overlay
+software. Depending on the kindness of strangers works if you all share
+a common goal, like downloading free music, but it’s difficult for a new
+overlay application to go viral, and even if it does, making sure there
+is sufficient capacity at any given time to carry all the traffic your
+application generates is often problematic. It sometimes works for free
+services, but not any application you might hope to monetize.
+
+If only there were a way to pay someone for the right to load and run
+your software on servers spread all over the world. Of course, that’s
+exactly what commodity clouds like Amazon AWS, Microsoft Azure, and
+the Google Cloud Platform provide. To many, the cloud offers a
+seemingly unlimited number of servers, but it’s actually just as
+important—if not more important—where these servers are located. As we
+discussed at the end of **Chapter 4** they are widely distributed across 150+
+well-connected sites.
+
+Suppose, for example, that you want to stream a collection of live video
+or audio channels to millions of users, or you want to support thousands
+of video conferencing sessions, each of which connects a dozen widely
+distributed participants. In both cases, you construct an overlay
+multicast tree (one per video channel in the first example, and one per
+conference session in the second example), with the overlay nodes in the
+tree located at some combination of those 150 cloud sites. Then you
+allow the end-users, from their general-purpose web browsers or
+purpose-built smartphone apps, connect to the multicast tree(s) of their
+choice. If you need to store some of the video/audio content to play at
+a later time (e.g., to support time shifting) then you might also buy
+some storage capacity at some or all of those cloud sites, effectively
+building your own Content Distribution Network.
+
+Taking the long view, while the Internet was originally conceived as a
+pure communication service, with arbitrary compute-and-storage
+applications allowed to flourish around the edges, today application
+software is for all practical purposes embedded within (distributed
+across) the network, and it is increasingly difficult to tell where
+the Internet stops and the Cloud starts. This blending will only
+continue to deepen as the cloud moves closer and closer to the edge
+(e.g., to thousands of sites where access networks are anchored) and
+the economies-of-scale drive the hardware devices used to build
+Internet/Cloud sites increasingly towards commonality.
+

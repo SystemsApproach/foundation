@@ -1,5 +1,5 @@
-1.3 Architecture
-================
+Chapter 3: Architecture
+=======================
 
 The previous section established a pretty substantial set of
 requirements for network design—a computer network must provide
@@ -20,8 +20,8 @@ central ideas that are common to all network architectures. It also
 introduces two of the most widely referenced architectures—the OSI (or
 7-layer) architecture and the Internet architecture.
 
-Layering and Protocols
-----------------------
+3.1 Layering and Protocols
+-------------------------------
 
 Abstraction—the hiding of implementation details behind a well-defined
 interface—is the fundamental tool used by system designers to manage
@@ -195,8 +195,117 @@ in their respective architectures. We briefly describe the architectures
 defined by the IETF and ISO shortly, but first there are two additional
 things we need to explain about the mechanics of protocol layering.
 
-Encapsulation
--------------
+3.2 Virtualization
+------------------
+
+For almost as long as there have been packet-switched networks, there
+have been ideas about how to virtualize them, starting with virtual
+circuits. But what exactly does it mean to virtualize a network?
+
+Virtual memory is a helpful example. Virtual memory creates an
+abstraction of a large and private pool of memory, even though the
+underlying physical memory may be shared by many applications and
+considerably smaller that the apparent pool of virtual memory. This
+abstraction enables programmers to operate under the illusion that there
+is plenty of memory and that no-one else is using it, while under the
+covers the memory management system takes care of things like mapping
+the virtual memory to physical resources and avoiding conflict between
+users.
+
+Similarly, server virtualization presents the abstraction of a virtual
+machine (VM), which has all the features of a physical machine. Again,
+there may be many VMs supported on a single physical server, and the
+operating system and users on the virtual machine are happily unaware
+that the VM is being mapped onto physical resources.
+
+A key point is the virtualization of computing resources preserves the
+abstractions and interfaces that existed before they were virtualized.
+This is important because it means that users of those abstractions
+don’t need to change—they see a faithful reproduction of the resource
+being virtualized. Virtualization also means that the different users
+(sometimes called *tenants*) cannot interfere with each other. So what
+happens when we try to virtualize a network?
+
+VPNs, as described in **Section 3.3**,
+were one early success for virtual networking. They allowed carriers
+to present corporate customers with the illusion that they had their
+own private network, even though in reality they were sharing
+underlying links and switches with many other users. VPNs, however,
+only virtualize a few resources, notably addressing and routing
+tables. Network virtualization as commonly understood today goes
+further, virtualizing every aspect of networking. That means that a
+virtual network should support all the basic abstractions of a
+physical network. In this sense, they are analogous to the virtual
+machine, with its support of all the resources of a server: CPU,
+storage, I/O, and so on.
+
+To this end, VLANS, as described in **Section 3.2**, are how we
+typically virtualize an L2 network. VLANs proved to be quite useful to
+enterprises that wanted to isolate different internal groups (e.g.,
+departments, labs), giving each of them the appearance of having their
+own private LAN. VLANs were also seen as a promising way to virtualize
+L2 networks in cloud datacenters, making it possible to give each
+tenant their own L2 network so as to isolate their traffic from the
+traffic of all other tenants. But there was a problem: the 4096
+possible VLANs was not sufficient to account for all the tenants that
+a cloud might host, and to complicate matters, in a cloud the network
+needs to connect *virtual machines* rather than the physical machines
+that those VMs run on.
+
+To address this problem, another standard called *Virtual Extensible
+LAN* (VXLAN) was introduced. Unlike the original approach, which
+effectively encapsulated a virtualized ethernet frame inside another
+ethernet frame, VXLAN encapsulates a virtual ethernet frame inside a UDP
+packet. This means a VXLAN-based virtual network (which is often
+referred to as an *overlay network*) runs on top of an IP-based network,
+which in turn runs on an underlying ethernet (or perhaps in just one
+VLAN of the underlying ethernet). VXLAN also makes it possible for one
+cloud tenant to have multiple VLANs of their own, which allows them to
+segregate their own internal traffic. This means it is ultimately
+possible to have a VLAN encapsulated in a VXLAN overlay encapsulated in
+a VLAN.
+
+The powerful thing about virtualization is that when done right, it
+should be possible to nest one virtualized resource inside another
+virtualized resource, since after all, a virtual resource should behave
+just like a physical resources and we know how to virtualize physical
+resources! Said another way, being able to virtualize a virtual resource
+is the best proof that you have done a good job of virtualizing the
+original physical resource. To re-purpose the mythology of the World
+Turtle: It’s virtual networks all the way down.
+
+.. _fig-vxlan:
+.. figure:: figures/impl-Slide8.png
+   :width: 500px
+   :align: center
+
+   VXLAN Header encapsulated in a UDP/IP packet. 
+   header.
+
+The actual VXLAN header is simple, as shown in :numref:`Figure %s
+<fig-vxlan>`. It includes a 24-bit *Virtual Network Id* (VNI), plus
+some flag and reserved bits. It also implies a particular setting of
+the UDP source and destination port fields (see **Section 5.1**), with
+the destination port 4789 officially reserved for VXLANs. Figuring out
+how to uniquely identify virtual LANs (VLAN tags) and virtual networks
+(VXLAN VIDs) is the easy part. This is because encapsulation is the
+fundamental cornerstone of virtualization; all you need to add is an
+identifier that tells you which of many possible users this
+encapsulated packet belongs to.
+
+The hard part is grappling with the idea of virtual networks being
+nested (encapsulated) inside virtual networks, which is networking’s
+version of recursion. The other challenge is understanding how to
+automate the creation, management, migration, and deletion of virtual
+networks, and on this front there is still a lot of room for
+improvement. Mastering this challenge will be at the heart of networking
+in the next decade, and while some of this work will undoubtedly happen
+in proprietary settings, there are open source network virtualization
+platforms (e.g., the Linux Foundation’s *Tungsten Fabric* project)
+leading the way.
+
+3.3 Encapsulation
+-----------------
 
 Consider what happens in when one of the application programs sends a
 message to its peer by passing the message to RRP. From RRP’s
@@ -253,42 +362,11 @@ entire body of the message, including both the original application’s
 data and all the headers attached to that data by higher-level
 protocols.
 
-Multiplexing and Demultiplexing
--------------------------------
+3.4 Reference Architectures
+---------------------------
 
-Recall that a fundamental idea of packet switching is to multiplex
-multiple flows of data over a single physical link. This same idea
-applies up and down the protocol graph, not just to switching nodes. In
-:numref:`Figure %s <fig-protgraph>`, for example, we can think of RRP as
-implementing a logical communication channel, with messages from two
-different applications multiplexed over this channel at the source host
-and then demultiplexed back to the appropriate application at the
-destination host.
-
-Practically speaking, this simply means that the header that RRP
-attaches to its messages contains an identifier that records the
-application to which the message belongs. We call this identifier RRP’s
-*demultiplexing key*, or *demux key* for short. At the source host, RRP
-includes the appropriate demux key in its header. When the message is
-delivered to RRP on the destination host, it strips its header, examines
-the demux key, and demultiplexes the message to the correct application.
-
-RRP is not unique in its support for multiplexing; nearly every protocol
-implements this mechanism. For example, HHP has its own demux key to
-determine which messages to pass up to RRP and which to pass up to MSP.
-However, there is no uniform agreement among protocols—even those within
-a single network architecture—on exactly what constitutes a demux key.
-Some protocols use an 8-bit field (meaning they can support only 256
-high-level protocols), and others use 16- or 32-bit fields. Also, some
-protocols have a single demultiplexing field in their header, while
-others have a pair of demultiplexing fields. In the former case, the
-same demux key is used on both sides of the communication, while in the
-latter case each side uses a different key to identify the high-level
-protocol (or application program) to which the message is to be
-delivered.
-
-7-Layer OSI Model
------------------
+3.4.1 OSI Model
+~~~~~~~~~~~~~~~~~~~~
 
 The ISO was one of the first organizations to formally define a common
 way to connect computers. Their architecture, called the *Open Systems
@@ -340,8 +418,8 @@ streams that are part of a single application. For example, it might
 manage an audio stream and a video stream that are being combined in a
 teleconferencing application.
 
-Internet Architecture
----------------------
+3.4.2 Internet Architecture
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The Internet architecture, which is also sometimes called the TCP/IP
 architecture after its two main protocols, is depicted in
@@ -484,5 +562,91 @@ meetings:
    and lower-level communication technologies to coexist, share
    capabilities, and evolve rapidly. The narrow-waisted model is
    critical to the Internet’s ability to adapt to new user
-   demands and changing technologies. :ref:`[Next] <key-pipe-full>`
+   demands and changing technologies.
 
+3.4.3 Cloud Architecture
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Internet has been described as having a *narrow waist* architecture,
+with one universal protocol in the middle (IP), widening to support many
+transport and application protocols above it (e.g., TCP, UDP, RTP,
+SunRPC, DCE-RPC, gRPC, SMTP, HTTP, SNMP) and able to run on top of many
+network technologies below (e.g., Ethernet, PPP, WiFi, SONET, ATM). This
+general structure has been a key to the Internet becoming ubiquitous: by
+keeping the IP layer that everyone has to agree to minimal, a thousand
+flowers were allowed to bloom both above and below. This is now a widely
+understood strategy for any platform trying to achieve universal
+adoption.
+
+But something else has happened over the last 30 years. By not
+addressing all the issues the Internet would eventually face as it grew
+(e.g., security, congestion, mobility, real-time responsiveness, and so
+on) it became necessary to introduce a series of additional features
+into the Internet architecture. Having IP’s universal addresses and
+best-effort service model was a necessary condition for adoption, but
+not a sufficient foundation for all the applications people wanted to
+build.
+
+We’re yet to see some of these solutions—future chapters will describe
+how the Internet manages congestion (**Chapter 6**, provides security
+(**Chapter 8**), and supports real-time multimedia applications
+(**Chapters 7** and **Chapter 9**)—but it is informative to take this
+opportunity to reconcile the value of a universal narrow waist with
+the evolution that inevitably happens in any long-lived system: the
+“fixed point” around which the rest of the architecture evolves has
+moved to a new spot in the software stack. In short, HTTP has become
+the new narrow waist; the one shared/assumed piece of the global
+infrastructure that makes everything else possible. This didn’t happen
+overnight or by proclamation, although some did anticipate it would
+happen. The narrow waist drifted slowly up the protocol stack as a
+consequence of an evolution (to mix geoscience and biological
+metaphors).
+ 
+.. _fig-waist:
+.. figure:: figures/rpc-Slide3.png
+   :width: 500px
+   :align: center
+
+   HTTP (plus TLS, TCP, and IP) forming the narrow
+   waist of today's Internet architecture.
+
+Putting the narrow waist label purely on HTTP is an over simplification.
+It’s actually a team effort, with the HTTP/TLS/TCP/IP combination now
+serving as the Internet’s common platform.
+
+-  HTTP provides global object identifiers (URIs) and a simple GET/PUT
+   interface.
+
+-  TLS provides end-to-end communication security.
+
+-  TCP provides connection management, reliable transmission, and
+   congestion control.
+
+-  IP provides global host addresses and a network abstraction layer.
+
+In other words, even though you are free to invent your own congestion
+control algorithm, TCP solves this problem quite well, so it makes sense
+to reuse that solution. Similarly, even though you are free to invent
+your own RPC protocol, HTTP provides a perfectly serviceable one (which
+because it comes bundled with proven security, has the added feature of
+not being blocked by enterprise firewalls), so again, it makes sense to
+reuse it rather than reinvent the wheel.
+
+Somewhat less obviously, HTTP also provides a good foundation for
+dealing with mobility. If the resource you want to access has moved,
+you can have HTTP return a *redirect response* that points the client
+to a new location. Similarly, HTTP enables injecting *caching proxies*
+between the client and server, making it possible to replicate popular
+content in multiple locations and save clients the delay of going all
+the way across the Internet to retrieve some piece of information.
+(Both of these capabilities are discussed in **Section 9.1**.)
+Finally, HTTP has been used to deliver real-time multimedia, in an
+approach known as *adaptive streaming*. (See how in **Section 7.2**.)
+
+.. admonition:: Broader Perspective
+
+   To learn more about the centrality of HTTP, we recommend: `HTTP:
+   An Evolvable Narrow Waist for the Future
+   Internet <https://www2.eecs.berkeley.edu/Pubs/TechRpts/2012/EECS-2012-5.pdf>`__,
+   January 2012.
+   

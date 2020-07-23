@@ -1,6 +1,5 @@
-==================
- 1.2 Requirements
-==================
+Chapter 2:  Requirements
+===============================
 
 We have established an ambitious goal for ourselves: to understand how
 to build a computer network from the ground up. Our approach to
@@ -17,47 +16,162 @@ invented. It is our experience that once you understand the fundamental
 ideas, any new protocol that you are confronted with will be relatively
 easy to digest.
 
-Stakeholders
-============
+2.1 Generality
+-------------------
 
-As we noted above, a student of networks can take several perspectives.
-When we wrote the first edition of this book, the majority of the
-population had no Internet access at all, and those who did obtained it
-while at work, at a university, or by a dial-up modem at home. The set
-of popular applications could be counted on one’s fingers. Thus, like
-most books at the time, ours focused on the perspective of someone who
-would design networking equipment and protocols. We continue to focus on
-this perspective, and our hope is that after reading this book you will
-know how to design the networking equipment and protocols of the future.
+Most people know the Internet through its applications: the World Wide
+Web, email, social media, streaming music or movies, videoconferencing,
+instant messaging, file-sharing, to name just a few examples. That is to
+say, we interact with the Internet as *users* of the network. Internet
+users represent the largest class of people who interact with the
+Internet in some way, but there are several other important
+constituencies.
 
-However, we also want to cover the perspectives of two additional
-stakeholders: those who develop networked applications and those who
-manage or operate networks. Let’s consider how these three stakeholders
-might list their requirements for a network:
+There is the group of people who *create* the applications—a group that
+has greatly expanded in recent years as powerful programming platforms
+and new devices such as smartphones have created new opportunities to
+develop applications quickly and to bring them to a large market.
 
--  An *application programmer* would list the services that his or her
-   application needs: for example, a guarantee that each message the
-   application sends will be delivered without error within a certain
-   amount of time or the ability to switch gracefully among different
-   connections to the network as the user moves around.
+Then there are those who *operate* or *manage* networks—mostly a
+behind-the-scenes job, but a critical one and often a very complex one.
+With the prevalence of home networks, more and more people are also
+becoming, if only in a small way, network operators.
 
--  A *network operator* would list the characteristics of a system that
-   is easy to administer and manage: for example, in which faults can be
-   easily isolated, new devices can be added to the network and
-   configured correctly, and it is easy to account for usage.
+Finally, there are those who *design* and *build* the devices and
+protocols that collectively make up the Internet. That final
+constituency is the traditional target of networking textbooks such as
+this one and will continue to be our main focus. However, throughout
+this book we will also consider the perspectives of application
+developers and network operators.
 
--  A *network designer* would list the properties of a cost-effective
-   design: for example, that network resources are efficiently utilized
-   and fairly allocated to different users. Issues of performance are
-   also likely to be important.
+Considering these perspectives will enable us to better understand the
+diverse requirements that a network must meet. Application developers
+will also be able to make applications that work better if they
+understand how the underlying technology works and interacts with the
+applications. So, before we start figuring out how to build a network,
+let's look more closely at the types of applications that today's
+networks support.
 
-This section attempts to distill the requirements of different
-stakeholders into a high-level introduction to the major considerations
-that drive network design and, in doing so, identify the challenges
-addressed throughout the rest of this book.
+The World Wide Web is the Internet application that catapulted the
+Internet from a somewhat obscure tool used mostly by scientists and
+engineers to the mainstream phenomenon that it is today. The Web itself
+has become such a powerful platform that many people confuse it with the
+Internet, and it's a bit of a stretch to say that the Web is a single
+application.
 
-Scalable Connectivity
-=====================
+In its basic form, the Web presents an intuitively simple interface.
+Users view pages full of textual and graphical objects and click on
+objects that they want to learn more about, and a corresponding new page
+appears. Most people are also aware that just under the covers each
+selectable object on a page is bound to an identifier for the next page
+or object to be viewed. This identifier, called a Uniform Resource
+Locator (URL), provides a way of identifying all the possible objects
+that can be viewed from your web browser. For example,
+
+.. code-block:: html
+
+   http://www.cs.princeton.edu/llp/index.html
+
+is the URL for a page providing information about one of this book's
+authors: the string ``http`` indicates that the Hypertext Transfer
+Protocol (HTTP) should be used to download the page,
+``www.cs.princeton.edu`` is the name of the machine that serves the
+page, and ``/llp/index.html`` uniquely identifies Larrys home page at
+this site.
+
+What most web users are not aware of, however, is that by clicking on
+just one such URL over a dozen messages may be exchanged over the
+Internet, and many more than that if the web page is complicated with
+lots of embedded objects. This message exchange includes up to six
+messages to translate the server name (``www.cs.princeton.edu``) into
+its Internet Protocol (IP) address (``128.112.136.35``), three messages
+to set up a Transmission Control Protocol (TCP) connection between your
+browser and this server, four messages for your browser to send the HTTP
+"GET" request and the server to respond with the requested page (and for
+each side to acknowledge receipt of that message), and four messages to
+tear down the TCP connection. Of course, this does not include the
+millions of messages exchanged by Internet nodes throughout the day,
+just to let each other know that they exist and are ready to serve web
+pages, translate names to addresses, and forward messages toward their
+ultimate destination.
+
+Another widespread application class of the Internet is the delivery of
+"streaming" audio and video. Services such as video on demand and
+Internet radio use this technology. While we frequently start at a
+website to initiate a streaming session, the delivery of audio and video
+has some important differences from fetching a simple web page of text
+and images. For example, you often don't want to download an entire
+video file—a process that might take a few minutes—before watching the
+first scene. Streaming audio and video implies a more timely transfer of
+messages from sender to receiver, and the receiver displays the video or
+plays the audio pretty much as it arrives.
+
+Note that the difference between streaming applications and the more
+traditional delivery of text, graphics, and images is that humans
+consume audio and video streams in a continuous manner, and
+discontinuity—in the form of skipped sounds or stalled video—is not
+acceptable. By contrast, a regular (non-streaming) page can be
+delivered and read in bits and pieces. This difference affects how the
+network supports these different classes of applications.
+
+A subtly different application class is *real-time* audio and video.
+These applications have considerably tighter timing constraints than
+streaming applications. When using a voice-over-IP application such as
+Skype or a videoconferencing application, the interactions among the
+participants must be timely. When a person at one end gestures, then
+that action must be displayed at the other end as quickly as possible.\ [#]_
+
+.. [#] Not quite "as soon as possible"... Human factors research
+       indicates 300 ms is a reasonable upper bound for how much
+       round-trip delay can be tolerated in a telephone call before
+       humans complain, and a 100-ms delay sounds very good.
+
+When one person tries to interrupt another, the interrupted person needs
+to hear that as soon as possible and decide whether to allow the
+interruption or to keep talking over the interrupter. Too much delay in
+this sort of environment makes the system unusable. Contrast this with
+video on demand where, if it takes several seconds from the time the
+user starts the video until the first image is displayed, the service is
+still deemed satisfactory. Also, interactive applications usually entail
+audio and/or video flows in both directions, while a streaming
+application is most likely sending video or audio in only one direction.
+
+.. _fig-vic:
+.. figure:: figures/f01-01-9780123850591.png
+   :width: 600px
+   :align: center
+
+   A multimedia application including videoconferencing.
+
+Videoconferencing tools that run over the Internet have been around now
+since the early 1990s but have achieved widespread use in the last few
+years, with several commercial products on the market. An example of one
+such system is shown in :numref:`Figure %s <fig-vic>`.  Just as
+downloading a web page involves a bit more than meets the eye, so too
+with video applications. Fitting the video content into a relatively
+low bandwidth network, for example, or making sure that the video and
+audio remain in sync and arrive in time for a good user experience are
+all problems that network and protocol designers have to worry
+about. We'll look at these and many other issues related to multimedia
+applications later in the book.
+
+Although they are just two examples, downloading pages from the web and
+participating in a videoconference demonstrate the diversity of
+applications that can be built on top of the Internet and hint at the
+complexity of the Internet's design. Later in the book we will develop a
+more complete taxonomy of application types to help guide our discussion
+of key design decisions as we seek to build, operate, and use networks
+that such a wide range of applications. The book concludes by revisiting
+these two specific applications, as well as several others that
+illustrate the breadth of what is possible on today's Internet.
+
+For now, this quick look at a few typical applications will suffice to
+enable us to start looking at the problems that must be addressed if we
+are to build a network that supports such application diversity.
+
+
+2.2 Scalable Connectivity 
+----------------------------
 
 Starting with the obvious, a network must provide connectivity among a
 set of computers. Sometimes it is enough to build a limited network that
@@ -228,8 +342,8 @@ addresses.
   physical), and the use of such addresses to forward messages toward
   the appropriate destination node(s). :ref:`[Next] <key-stat-mux>`
 
-Cost-Effective Resource Sharing
-===============================
+2.3 Cost-Effective Resource Sharing
+----------------------------------------
 
 As stated above, this book focuses on packet-switched networks. This
 section explains the key requirement of computer
@@ -393,8 +507,8 @@ this state, it is said to be *congested*.
   the key challenges of statistical multiplexing. :ref:`[Next]
   <key-semantic-gap>`
 
-Support for Common Services
-===========================
+2.4 Support for Common Services
+-----------------------------------
 
 The previous discussion focused on the challenges involved in providing
 cost-effective connectivity among a group of hosts, but it is overly
@@ -456,8 +570,8 @@ with each application selecting the type that best meets its needs. The
 rest of this section illustrates the thinking involved in defining
 useful channels.
 
-Identify Common Communication Patterns
---------------------------------------
+2.4.1 Identify Common Communication Patterns
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Designing abstract channels involves first understanding the
 communication needs of a representative collection of applications, then
@@ -550,8 +664,8 @@ handsets). We will see this question of how various network services are
 partitioned between the packet switches and the end hosts (devices) as a
 recurring issue in network design.
 
-Reliable Message Delivery
--------------------------
+2.4.2 Reliable Message Delivery
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As suggested by the examples just considered, reliable message delivery
 is one of the most important functions that a network can provide. It is
@@ -625,8 +739,8 @@ introducing a high number of bit errors.
    This is sometimes called the *semantic gap.*  :ref:`[Next]
    <key-hourglass>`
    
-Manageability
-=============
+2.5 Manageability
+-------------------
 
 A final requirement, which seems to be neglected or left till last all
 too often (as we do here), is that networks need to be managed. Managing
@@ -663,3 +777,69 @@ the book, and one we pay particular attention to in the *Perspectives*
 section at the end of each chapter. For now, suffice it to say that
 managing a rapidly evolving network is arguably *the* central challenge
 in networking today.
+
+2.6 Security
+--------------
+
+Computer networks are typically a shared resource used by many
+applications representing different interests. The Internet is
+particularly widely shared, being used by competing businesses, mutually
+antagonistic governments, and opportunistic criminals. Unless security
+measures are taken, a network conversation or a distributed application
+may be compromised by an adversary.
+
+Consider, for example, some threats to secure use of the web. Suppose
+you are a customer using a credit card to order an item from a website.
+An obvious threat is that an adversary would eavesdrop on your network
+communication, reading your messages to obtain your credit card
+information. How might that eavesdropping be accomplished? It is trivial
+on a broadcast network such as an Ethernet or Wi-Fi, where any node can
+be configured to receive all the message traffic on that network. More
+elaborate approaches include wiretapping and planting spy software on
+any of the chain of nodes involved. Only in the most extreme cases
+(e.g.,national security) are serious measures taken to prevent such
+monitoring, and the Internet is not one of those cases. It is possible
+and practical, however, to encrypt messages so as to prevent an
+adversary from understanding the message contents. A protocol that does
+so is said to provide *confidentiality*. Taking the concept a step
+farther, concealing the quantity or destination of communication is
+called *traffic confidentiality*—because merely knowing how much
+communication is going where can be useful to an adversary in some
+situations.
+
+Even with confidentiality there still remains threats for the website
+customer. An adversary who can’t read the contents of your encrypted
+message might still be able to change a few bits in it, resulting in a
+valid order for, say, a completely different item or perhaps 1000 units
+of the item. There are techniques to detect, if not prevent, such
+tampering. A protocol that detects such message tampering is said to
+provide *integrity*.
+
+Another threat to the customer is unknowingly being directed to a false
+website. This can result from a Domain Name System (DNS) attack, in
+which false information is entered in a DNS server or the name service
+cache of the customer’s computer. This leads to translating a correct
+URL into an incorrect IP address—the address of a false website. A
+protocol that ensures that you really are talking to whom you think
+you’re talking is said to provide *authentication*. Authentication
+entails integrity, since it is meaningless to say that a message came
+from a certain participant if it is no longer the same message.
+
+The owner of the website can be attacked as well. Some websites have
+been defaced; the files that make up the website content have been
+remotely accessed and modified without authorization. That is an issue
+of *access control*: enforcing the rules regarding who is allowed to do
+what. Websites have also been subject to denial of service (DoS)
+attacks, during which would-be customers are unable to access the
+website because it is being overwhelmed by bogus requests. Ensuring a
+degree of access is called *availability*.
+
+In addition to these issues, the Internet has notably been used as a
+means for deploying malicious code, generally called *malware*, that
+exploits vulnerabilities in end systems. *Worms*, pieces of
+self-replicating code that spread over networks, have been known for
+several decades and continue to cause problems, as do their relatives,
+*viruses*, which are spread by the transmission of infected files.
+Infected machines can then be arranged into *botnets*, which can be used
+to inflict further harm, such as launching DoS attacks.
+
