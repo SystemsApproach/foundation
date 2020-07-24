@@ -1,9 +1,6 @@
 Chapter 1:  Introduction
 ========================
 
-1.1 Building a Network
--------------------------
-
 Suppose you want to build a computer network, one that has the potential
 to grow to global proportions and to support applications as diverse as
 teleconferencing, video on demand, electronic commerce, distributed
@@ -57,16 +54,18 @@ developing networked applications than in the past. So we need to
 consider networks from these multiple perspectives: builders, operators,
 application developers.
 
-To start us on the road toward understanding how to build, operate, and
-program a network, this chapter does four things. First, it explores the
-requirements that different applications and different communities of
-people place on the network. Second, it introduces the idea of a network
-architecture, which lays the foundation for the rest of the book. Third,
-it introduces some of the key elements in the implementation of computer
-networks. Finally, it identifies the key metrics that are used to
-evaluate the performance of computer networks.
+This book lays the foundation for understanding how to build, operate,
+and program a network. First, it explores the requirements that
+different applications and different communities of people place on
+the network. Second, it introduces the idea of a network architecture,
+which provides a framework (blueprint) for the network we're
+building. Third, it introduces some of the key elements in the
+implementation of computer networks, which are necessary to translate
+our paper design into real, functioning system. Finally, it identifies
+the key metrics that are used to evaluate the performance of computer
+networks.
 
-1.2 Stakeholders
+1.1 Stakeholders
 ------------------
 
 As we noted above, a student of networks can take several perspectives. 
@@ -100,21 +99,20 @@ might list their requirements for a network:
    and fairly allocated to different users. Issues of performance are 
    also likely to be important. 
 
-This section attempts to distill the requirements of different 
-stakeholders into a high-level introduction to the major considerations 
-that drive network design and, in doing so, identify the challenges 
-addressed throughout the rest of this book. 
+The next chapter distills the requirements of different stakeholders
+into a high-level introduction to the major considerations that drive
+network design and, in doing so, identify the challenges addressed
+throughout the rest of this book.
 
-1.3  Cloudification of the Internet
+1.2  Cloudification of the Internet
 --------------------------------------------------
 
-This chapter introduces some of the stakeholders in computer
-networks—network designers, application developers, end users, and
-network operators—to help motivate the technical requirements that shape
-how networks are designed and built. This presumes all design decisions
-are purely technical, but of course, that's usually not the case. Many
-other factors, from market forces, to government policy, to ethical
-considerations, also influence how networks are designed and built.
+Identifying the stakeholders in computer networks helps to motivate
+the technical requirements that shape how networks are designed and
+built. This presumes all design decisions are purely technical, but of
+course, that's usually not the case. Many other factors, from market
+forces, to government policy, to ethical considerations, also
+influence how networks are designed and built.
 
 Of these, the marketplace is the most influential, and corresponds to
 the interplay between network operators (e.g., AT&T, Comcast, Verizon,
