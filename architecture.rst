@@ -1,9 +1,9 @@
 Chapter 3: Architecture
 =======================
 
-The previous section established a pretty substantial set of
-requirements for network design—a computer network must provide
-general, cost-effective, fair, and robust connectivity among a large
+The previous chapter established a substantial set of requirements for
+network design—a computer network must provide general,
+cost-effective, fair, secure, and robust connectivity among a large
 number of computers. As if this weren’t enough, networks do not remain
 fixed at any single point in time but must evolve to accommodate
 changes in both the underlying technologies upon which they are based
@@ -13,12 +13,13 @@ varying levels of skill. Designing a network to meet these
 requirements is no small task.
 
 To help deal with this complexity, network designers have developed
-general blueprints—usually called *network architectures*—that guide the
-design and implementation of networks. This section defines more
+general blueprints—usually called *network architectures*—that guide
+the design and implementation of networks. This section defines more
 carefully what we mean by a network architecture by introducing the
 central ideas that are common to all network architectures. It also
-introduces two of the most widely referenced architectures—the OSI (or
-7-layer) architecture and the Internet architecture.
+introduces two of the most historically important architectures—the
+OSI (or 7-layer) architecture and the Internet architecture—as well as
+the defacto cloud architecture that is in wide-spread use today.
 
 3.1 Layering and Protocols
 -------------------------------
@@ -364,6 +365,16 @@ protocols.
 
 3.4 Reference Architectures
 ---------------------------
+
+We conclude this chapter by looking at three example network
+architectures. The first two are historically important, and were the
+result of explicit efforts to define a coherent architecture. The
+third is our characterization of the defacto architecture in use
+today. It evolved out of the Internet architecture (and some would
+claim it as the updated version of the Internet architecture), but in
+truth, no one has explicitly defined it, intelligently designed it,
+santioned it, or even named it. It is just the natural consequence of
+a system evolving over time.
 
 3.4.1 OSI Model
 ~~~~~~~~~~~~~~~~~~~~

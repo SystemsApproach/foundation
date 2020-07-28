@@ -16,41 +16,32 @@ invented. It is our experience that once you understand the fundamental
 ideas, any new protocol that you are confronted with will be relatively
 easy to digest.
 
+Any systems-oriented discussion of requirements starts with the
+*-ities*: reliability, scalability, availability, scalability,
+security, manageability, and so on. These are all requirements of the
+network we want to build, but it's not always help to simply state the
+obvious. Our goal in this chapter is frame the discussion of
+requirements to the particular system we are trying to build. In doing
+so, we will touch on all the -ities, but in a way that brings the most
+important factors into sharper focus.
+
 2.1 Generality
 -------------------
 
 Most people know the Internet through its applications: the World Wide
-Web, email, social media, streaming music or movies, videoconferencing,
-instant messaging, file-sharing, to name just a few examples. That is to
-say, we interact with the Internet as *users* of the network. Internet
-users represent the largest class of people who interact with the
-Internet in some way, but there are several other important
-constituencies.
+Web, email, social media, streaming music or movies,
+videoconferencing, instant messaging, file-sharing, to name just a few
+examples. The most important statement we can make about these
+applications is that they know no bound. The Internet is a "universial
+communications platform" that enables a wide-range of applications. It
+was not purpose-built to support just one application, such as making
+voice calls or watching TV.
 
-There is the group of people who *create* the applications—a group that
-has greatly expanded in recent years as powerful programming platforms
-and new devices such as smartphones have created new opportunities to
-develop applications quickly and to bring them to a large market.
-
-Then there are those who *operate* or *manage* networks—mostly a
-behind-the-scenes job, but a critical one and often a very complex one.
-With the prevalence of home networks, more and more people are also
-becoming, if only in a small way, network operators.
-
-Finally, there are those who *design* and *build* the devices and
-protocols that collectively make up the Internet. That final
-constituency is the traditional target of networking textbooks such as
-this one and will continue to be our main focus. However, throughout
-this book we will also consider the perspectives of application
-developers and network operators.
-
-Considering these perspectives will enable us to better understand the
-diverse requirements that a network must meet. Application developers
-will also be able to make applications that work better if they
-understand how the underlying technology works and interacts with the
-applications. So, before we start figuring out how to build a network,
-let's look more closely at the types of applications that today's
-networks support.
+We take it for granted today, but generality is the first and most
+important requirement for the network we hope to build. This is an
+easy point to make, but has much a deeper implication, which is best
+understood by a closer look at the popular applications that run on it
+today.
 
 The World Wide Web is the Internet application that catapulted the
 Internet from a somewhat obscure tool used mostly by scientists and
@@ -78,22 +69,6 @@ Protocol (HTTP) should be used to download the page,
 ``www.cs.princeton.edu`` is the name of the machine that serves the
 page, and ``/llp/index.html`` uniquely identifies Larrys home page at
 this site.
-
-What most web users are not aware of, however, is that by clicking on
-just one such URL over a dozen messages may be exchanged over the
-Internet, and many more than that if the web page is complicated with
-lots of embedded objects. This message exchange includes up to six
-messages to translate the server name (``www.cs.princeton.edu``) into
-its Internet Protocol (IP) address (``128.112.136.35``), three messages
-to set up a Transmission Control Protocol (TCP) connection between your
-browser and this server, four messages for your browser to send the HTTP
-"GET" request and the server to respond with the requested page (and for
-each side to acknowledge receipt of that message), and four messages to
-tear down the TCP connection. Of course, this does not include the
-millions of messages exchanged by Internet nodes throughout the day,
-just to let each other know that they exist and are ready to serve web
-pages, translate names to addresses, and forward messages toward their
-ultimate destination.
 
 Another widespread application class of the Internet is the delivery of
 "streaming" audio and video. Services such as video on demand and
@@ -169,15 +144,18 @@ For now, this quick look at a few typical applications will suffice to
 enable us to start looking at the problems that must be addressed if we
 are to build a network that supports such application diversity.
 
-
 2.2 Scalable Connectivity 
 ----------------------------
 
-Starting with the obvious, a network must provide connectivity among a
-set of computers. Sometimes it is enough to build a limited network that
-connects only a few select machines. In fact, for reasons of privacy and
-security, many private (corporate) networks have the explicit goal of
-limiting the set of machines that are connected. In contrast, other
+Just as important as generality, a network must provide connectivity
+among a set of computers. The more we can scale the network to include
+more and more computers, devices, and ultimately people, the more
+powerful it will be. This is the idea behind the term "network effect."
+
+Certainly, it is sometimes enough to build a limited network that
+connects only a few select machines. In fact, for reasons of privacy
+and security, many private (corporate) networks have the explicit goal
+of limiting the set of machines that are connected. In contrast, other
 networks (of which the Internet is the prime example) are designed to
 grow in a way that allows them the potential to connect all the
 computers in the world. A system that is designed to support growth to
@@ -284,39 +262,46 @@ covered in this book.\ [#]_
    
    Interconnection of networks.
 
-A second way in which a set of computers can be indirectly connected
-is shown in :numref:`Figure %s <fig-internet-cloud>`. In this
-situation, a set of independent networks (clouds) are interconnected
-to form an *internetwork*, or internet for short. We adopt the
-Internet’s convention of referring to a generic internetwork of
-networks as a lowercase *i* internet, and the TCP/IP Internet we all
-use every day as the capital *I* Internet. A node that is connected
-to two or more networks is commonly called a *router* or *gateway*,
-and it plays much the same role as a switch—it forwards messages from
-one network to another. Note that an internet can itself be viewed as
-another kind of network, which means that an internet can be built
-from a set of internets.  Thus, we can recursively build arbitrarily
-large networks by interconnecting clouds to form larger clouds. It can
-reasonably be argued that this idea of interconnecting widely
-differing networks was the fundamental innovation of the Internet and
-that the successful growth of the Internet to global size and billions
-of nodes was the result of some very good design decisions by the
-early Internet architects, which we will discuss later.
+Thousands of networks, of dozens of different types and designs, have
+been built over the years, each owned and operated by a different
+organization. But to build a truely global networks, we need to find a
+way for all of those networks to federate with each other. This
+naturally leads to a a second way in which a set of computers can be
+indirectly connected is shown in :numref:`Figure %s
+<fig-internet-cloud>`. In this situation, a set of independent
+networks (clouds) are interconnected to form an *internetwork*, or
+internet for short. We adopt the Internet’s convention of referring to
+a generic internetwork of networks as a lowercase *i* internet, and
+the TCP/IP Internet we all use every day as the capital *I*
+Internet. A node that is connected to two or more networks is commonly
+called a *router* or *gateway*, and it plays much the same role as a
+switch—it forwards messages from one network to another.
 
-Just because a set of hosts are directly or indirectly connected to each
-other does not mean that we have succeeded in providing host-to-host
-connectivity. The final requirement is that each node must be able to
-say which of the other nodes on the network it wants to communicate
-with. This is done by assigning an *address* to each node. An address is
-a byte string that identifies a node; that is, the network can use a
-node’s address to distinguish it from the other nodes connected to the
-network. When a source node wants the network to deliver a message to a
-certain destination node, it specifies the address of the destination
-node. If the sending and receiving nodes are not directly connected,
-then the switches and routers of the network use this address to decide
-how to forward the message toward the destination. The process of
-determining systematically how to forward messages toward the
-destination node based on its address is called *routing*.
+Note that an internet can itself be viewed as another kind of network,
+which means that an internet can be built from a set of internets.
+Thus, we can recursively build arbitrarily large networks by
+interconnecting clouds to form larger clouds. It can reasonably be
+argued that this idea of interconnecting widely differing networks was
+the fundamental innovation of the Internet and that the successful
+growth of the Internet to global size and billions of nodes was the
+result of some very good design decisions by the early Internet
+architects, which we will discuss later.
+
+Just because a set of hosts are directly or indirectly connected to
+each other does not mean that we have succeeded in providing
+host-to-host connectivity. The related requirement is that each node
+must be able to say which of the other nodes on the network it wants
+to communicate with. This is done by assigning an *address* to each
+node. An address is a byte string that identifies a node; that is, the
+network can use a node’s address to distinguish it from the other
+nodes connected to the network. When a source node wants the network
+to deliver a message to a certain destination node, it specifies the
+address of the destination node. If the sending and receiving nodes
+are not directly connected, then the switches and routers of the
+network use this address to decide how to forward the message toward
+the destination. The process of determining systematically how to
+forward messages toward the destination node based on its address is
+called *routing*.
 
 This brief introduction to addressing and routing has presumed that the
 source node wants to send a message to a single destination node
@@ -345,10 +330,9 @@ addresses.
 2.3 Cost-Effective Resource Sharing
 ----------------------------------------
 
-As stated above, this book focuses on packet-switched networks. This
-section explains the key requirement of computer
-networks—efficiency—that leads us to packet switching as the strategy of
-choice.
+As stated above, we focus on packet-switched networks. This section
+explains the key requirement of computer networks—efficiency—that
+leads us to packet switching as the strategy of choice.
 
 Given a collection of nodes indirectly connected by a nesting of
 networks, it is possible for any pair of hosts to send messages to each
@@ -510,14 +494,14 @@ this state, it is said to be *congested*.
 2.4 Support for Common Services
 -----------------------------------
 
-The previous discussion focused on the challenges involved in providing
+The discussion up this this point focuses on the challenges providing
 cost-effective connectivity among a group of hosts, but it is overly
-simplistic to view a computer network as simply delivering packets among
-a collection of computers. It is more accurate to think of a network as
-providing the means for a set of application processes that are
-distributed over those computers to communicate. In other words, the
-next requirement of a computer network is that the application programs
-running on the hosts connected to the network must be able to
+simplistic to view a computer network as simply delivering packets
+among a collection of computers. It is more accurate to think of a
+network as providing the means for a set of application processes that
+are distributed over those computers to communicate. In other words,
+the next requirement of a computer network is that the application
+programs running on the hosts connected to the network must be able to
 communicate in a meaningful way. From the application developer’s
 perspective, the network needs to make his or her life easier.
 
@@ -738,47 +722,8 @@ introducing a high number of bit errors.
    application expects and what the underlying technology can provide.
    This is sometimes called the *semantic gap.*  :ref:`[Next]
    <key-hourglass>`
-   
-2.5 Manageability
--------------------
 
-A final requirement, which seems to be neglected or left till last all
-too often (as we do here), is that networks need to be managed. Managing
-a network includes upgrading equipment as the network grows to carry
-more traffic or reach more users, troubleshooting the network when
-things go wrong or performance isn’t as desired, and adding new features
-in support of new applications. Network management has historically
-been a human-intensive aspect of networking, and while it is ulikely
-we'll get people entirely out of the loop, it is increasingly being
-addressed by automation and self-healing designs.
-
-This requirement is partly related to the issue of scalability discussed
-above—as the Internet has scaled up to support billions of users and at
-least hundreds of millions of hosts, the challenges of keeping the whole
-thing running correctly and correctly configuring new devices as they
-are added have become increasingly problematic. Configuring a single
-router in a network is often a task for a trained expert; configuring
-thousands of routers and figuring out why a network of such a size is
-not behaving as expected can become a task beyond any single human.
-This is why automation is becoming so important.
-
-One way to make a network easier to manage is to avoid change. Once the
-network is working, simply *do not touch it!* This mindset exposes the
-fundamental tension between *stability* and *feature velocity*: the rate
-at which new capabilities are introduced into the network. Favoring
-stability is the approach the telecommunications industry (not to
-mention University system administrators and corporate IT departments)
-adopted for many years, making it one of the most slow moving and risk
-averse industries you will find anywhere. But the recent explosion of
-the cloud has changed that dynamic, making it necessary to bring
-stability and feature velocity more into balance. The impact of the
-cloud on the network is a topic that comes up over and over throughout
-the book, and one we pay particular attention to in the *Perspectives*
-section at the end of each chapter. For now, suffice it to say that
-managing a rapidly evolving network is arguably *the* central challenge
-in networking today.
-
-2.6 Security
+2.5 Security
 --------------
 
 Computer networks are typically a shared resource used by many
@@ -842,4 +787,43 @@ several decades and continue to cause problems, as do their relatives,
 *viruses*, which are spread by the transmission of infected files.
 Infected machines can then be arranged into *botnets*, which can be used
 to inflict further harm, such as launching DoS attacks.
+
+2.6 Manageability
+-------------------
+
+A final requirement, which seems to be neglected or left till last all
+too often (as we do here), is that networks need to be managed. Managing
+a network includes upgrading equipment as the network grows to carry
+more traffic or reach more users, troubleshooting the network when
+things go wrong or performance isn’t as desired, and adding new features
+in support of new applications. Network management has historically
+been a human-intensive aspect of networking, and while it is ulikely
+we'll get people entirely out of the loop, it is increasingly being
+addressed by automation and self-healing designs.
+
+This requirement is partly related to the issue of scalability discussed
+above—as the Internet has scaled up to support billions of users and at
+least hundreds of millions of hosts, the challenges of keeping the whole
+thing running correctly and correctly configuring new devices as they
+are added have become increasingly problematic. Configuring a single
+router in a network is often a task for a trained expert; configuring
+thousands of routers and figuring out why a network of such a size is
+not behaving as expected can become a task beyond any single human.
+This is why automation is becoming so important.
+
+One way to make a network easier to manage is to avoid change. Once the
+network is working, simply *do not touch it!* This mindset exposes the
+fundamental tension between *stability* and *feature velocity*: the rate
+at which new capabilities are introduced into the network. Favoring
+stability is the approach the telecommunications industry (not to
+mention University system administrators and corporate IT departments)
+adopted for many years, making it one of the most slow moving and risk
+averse industries you will find anywhere. But the recent explosion of
+the cloud has changed that dynamic, making it necessary to bring
+stability and feature velocity more into balance. The impact of the
+cloud on the network is a topic that comes up over and over throughout
+the book, and one we pay particular attention to in the *Perspectives*
+section at the end of each chapter. For now, suffice it to say that
+managing a rapidly evolving network is arguably *the* central challenge
+in networking today.
 

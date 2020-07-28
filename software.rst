@@ -23,10 +23,9 @@ in commodity machines. Although computer networks have always been
 capable in principle of transporting any kind of information, such as
 digital voice samples, digitized images, and so on, this potential was
 not particularly interesting if the computers sending and receiving
-that data were too slow to do anything useful with the
-information. Virtually all of today’s computers are capable of playing
-back digitized audio and video at a speed and resolution that are
-quite usable.
+that data were too slow to do anything useful with the information.
+Virtually all of today’s computers are capable of playing back high
+quality digitized audio and video.
 
 In the years since the first edition of this book appeared, the
 writing of networked applications has become a mainstream activity and
@@ -209,8 +208,8 @@ text to a user on another machine. It is a simplified version of the
 Linux ``talk`` program, which is similar to the program at the core of
 instant messaging applications.
 
-4.1.1 Client
-~~~~~~~~~~~~
+4.1.1 Example Client
+~~~~~~~~~~~~~~~~~~~~
 
 We start with the client side, which takes the name of the remote
 machine as an argument. It calls the Linux utility to translate this name
@@ -287,8 +286,8 @@ sends it over the socket.
      }
    }
 
-4.1.2 Server
-~~~~~~~~~~~~
+4.1.2 Example Server
+~~~~~~~~~~~~~~~~~~~~
 
 The server is equally simple. It first constructs the address data
 structure by filling in its own port number (``SERVER_PORT``). By not
@@ -349,22 +348,60 @@ out the characters that arrive on the connection.
      }
    }
 
-4.2 Switches and SDN
---------------------
+4.2 Software-Defined Networks
+-----------------------------
+
+The socket API supports applications written on top of the network,
+but what about the implementation of the network itself? Part of this
+implementation is protocols like TCP that run on the end hosts
+connected to the edge of the network. TCP is typically part of the OS
+kernel, but is yet another software module, not so much different than
+the application program that use it. While the TCP module doesn't have
+the benefit of the socket API since it sits below that API, it does
+read messages from and and write messages to the network using a
+low-level counterpart. It also happen to be written in a systems
+programming language like C (rather than Java or Python), but once you
+understand what a program like TCP is trying to do, is a simple matter
+of writing a program that runs on a general-purpose computer to make
+it so.
+
+On the other hand, the switches and routers in the middle of the
+network require a different implementation strategy. They *can* be
+implemented as yet another software module that reads messages from
+one input port, decides how to forward the message towards its
+destination, and then writes the message to the appropriate output
+port—and this is exactly how the very first routers were
+implemented—but in practice, the implementation of a modern high-speed
+router or switch is quite different because of performance
+demands. For example, a switch in the middle of the Internet might be
+asked to forward billions of packets a second in order to keep up with
+100-Gbps line speeds. Software running on a general-purpose processor
+is not able to do this. Purpose-built hardware, in the form of
+*Application-specific Integrated Circuits (ASICs)* is required.
+
+Until recently, switching hardware has been implemented using
+fixed-function ASICs, but hardware is difficult to adapt, and so the
+latest trend is for switches to also be programmable. This means using
+a domain-specific processor rather than either a general-purpose
+processor or a fixed-function ASIC. The forwarding function running on
+this processos is then implemented in domain-specific programming
+language rather using than a general-purpose lanuage like Java or
+Python. This is all part of a emerging trend called *Software-Defined
+Networks (SDN)*, which we describe in a companion book.
 
 4.3 Cloud is the New Internet
 -----------------------------
 
-As we saw at the end of **Section 9.1**, there has been a migration of
-traditional Internet applications like email and web servers from
-machines running on-premises to VMs running in commodity clouds. This
-corresponds to a shift in terminology (from “Web Services” to “Cloud
-Services”) and in many of the underlying technologies being used (from
-Virtual Machines to Cloud Native micro-services). But the Cloud’s
-impact on how network applications are implemented today is even
-bigger than this migration suggests. It is the combination of
-commodity clouds and overlay networks (similar to those described in
-**Section 9.4**) that may eventually have the most impact.
+There has recently been a migration of traditional Internet
+applications like email and web servers from machines running
+on-premises to VMs running in commodity clouds. This corresponds to a
+shift in terminology (from “Web Services” to “Cloud Services”) and in
+many of the underlying technologies being used (from Virtual Machines
+to Cloud Native micro-services). But the Cloud’s impact on how network
+applications are implemented today is even bigger than this migration
+suggests. It is the combination of commodity clouds and overlay
+networks (which we describe in **Section 9.4**) that may eventually
+have the most impact.
 
 The biggest thing an overlay-based application needs to be effective is
 a wide footprint, that is, many points-of-presence around the world. IP

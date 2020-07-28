@@ -51,7 +51,7 @@ transmit over the network to perform acceptably. For some applications,
 this might be “whatever I can get”; for others, it might be some fixed
 number (preferably not more than the available link bandwidth); and for
 others, it might be a number that varies with time. We will provide more
-on this topic later in this section.
+on this topic later in this chapter.
 
 While you can talk about the bandwidth of the network as a whole,
 sometimes you want to be more precise, focusing, for example, on the
@@ -311,7 +311,7 @@ that can be achieved over a network is given by the simple relationship
 .. centered:: Throughput = TransferSize / TransferTime
 
 where TransferTime includes not only the elements of one-way
-identified earlier in this section, but also any additional time spent
+identified earlier in this chapter, but also any additional time spent
 requesting or setting up the transfer. Generally, we represent this
 relationship as
 
@@ -337,14 +337,14 @@ for small transfers.
 5.4 Application Performance Needs
 ---------------------------------
 
-The discussion in this section has taken a network-centric view of
+The discussion up to this point has taken a network-centric view of
 performance; that is, we have talked in terms of what a given link or
-channel will support. The unstated assumption has been that application
-programs have simple needs—they want as much bandwidth as the network
-can provide. This is certainly true of the aforementioned digital
-library program that is retrieving a 250-MB image; the more bandwidth
-that is available, the faster the program will be able to return the
-image to the user.
+channel will support. The unstated assumption has been that
+application programs have simple needs—they want as much bandwidth as
+the network can provide. This is certainly true of the aforementioned
+digital library program that is retrieving a 250-MB image; the more
+bandwidth that is available, the faster the program will be able to
+return the image to the user.
 
 However, some applications are able to state an upper limit on how much
 bandwidth they need. Video applications are a prime example. Suppose one
@@ -410,7 +410,7 @@ stream, as shown in :numref:`Figure %s <fig-jitter>`. Such variation
 is generally not introduced in a single physical link, but it can
 happen when packets experience different queuing delays in a multihop
 packet-switched network. This queuing delay corresponds to the
-component of latency defined earlier in this section, which varies
+component of latency defined earlier in this chapter, which varies
 with time.
 
 .. _fig-jitter:
