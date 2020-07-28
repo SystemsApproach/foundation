@@ -369,12 +369,11 @@ protocols.
 We conclude this chapter by looking at three example network
 architectures. The first two are historically important, and were the
 result of explicit efforts to define a coherent architecture. The
-third is our characterization of the defacto architecture in use
+third is our characterization of the *de facto* architecture in use
 today. It evolved out of the Internet architecture (and some would
 claim it as the updated version of the Internet architecture), but in
-truth, no one has explicitly defined it, intelligently designed it,
-santioned it, or even named it. It is just the natural consequence of
-a system evolving over time.
+truth, no one has explicitly defined it, santioned it, or even named
+it. It is just the natural consequence of a system evolving over time.
 
 3.4.1 OSI Model
 ~~~~~~~~~~~~~~~~~~~~
@@ -650,9 +649,8 @@ to a new location. Similarly, HTTP enables injecting *caching proxies*
 between the client and server, making it possible to replicate popular
 content in multiple locations and save clients the delay of going all
 the way across the Internet to retrieve some piece of information.
-(Both of these capabilities are discussed in **Section 9.1**.)
 Finally, HTTP has been used to deliver real-time multimedia, in an
-approach known as *adaptive streaming*. (See how in **Section 7.2**.)
+approach known as *adaptive streaming*. 
 
 .. admonition:: Broader Perspective
 
