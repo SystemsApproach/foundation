@@ -5,22 +5,14 @@ We have established an ambitious goal for ourselves: to understand how
 to build a computer network from the ground up. Our approach to
 accomplishing this goal will be to start from first principles and then
 ask the kinds of questions we would naturally ask if building an actual
-network. At each step, we will use today’s protocols to illustrate
-various design choices available to us, but we will not accept these
-existing artifacts as gospel. Instead, we will be asking (and answering)
-the question of *why* networks are designed the way they are. While it
-is tempting to settle for just understanding the way it’s done today, it
-is important to recognize the underlying concepts because networks are
-constantly changing as technology evolves and new applications are
-invented. It is our experience that once you understand the fundamental
-ideas, any new protocol that you are confronted with will be relatively
-easy to digest.
+network. The first question is what do we want from our network: *What
+are our requirements?*
 
 Any systems-oriented discussion of requirements starts with the
-*-ities*: reliability, scalability, availability, scalability,
+*-ities:* reliability, scalability, availability, scalability,
 security, manageability, and so on. These are all requirements of the
-network we want to build, but it's not always help to simply state the
-obvious. Our goal in this chapter is frame the discussion of
+network we want to build, but it's not always helpful to simply state
+the obvious. Our goal in this chapter is frame the discussion of
 requirements to the particular system we are trying to build. In doing
 so, we will touch on all the -ities, but in a way that brings the most
 important factors into sharper focus.
@@ -41,7 +33,15 @@ We take it for granted today, but generality is the first and most
 important requirement for the network we hope to build. This is an
 easy point to make, but has much a deeper implication, which is best
 understood by a closer look at the popular applications that run on it
-today.
+today. In practice, identifying a representative set of applications
+you want to support---we sometimes call these *use cases*---is a
+necessary first step for any system you want to build. We have the
+luxury of nearly forty years of hard-earned experience building
+applications on the Internet, but for illustrative purposes, let's
+suppose we decide we want to (minimally) support email, web surfing
+and video streaming.
+
+Start with email...
 
 The World Wide Web is the Internet application that catapulted the
 Internet from a somewhat obscure tool used mostly by scientists and
@@ -130,15 +130,16 @@ all problems that network and protocol designers have to worry
 about. We'll look at these and many other issues related to multimedia
 applications later in the book.
 
-Although they are just two examples, downloading pages from the web and
-participating in a videoconference demonstrate the diversity of
-applications that can be built on top of the Internet and hint at the
-complexity of the Internet's design. Later in the book we will develop a
-more complete taxonomy of application types to help guide our discussion
-of key design decisions as we seek to build, operate, and use networks
-that such a wide range of applications. The book concludes by revisiting
-these two specific applications, as well as several others that
-illustrate the breadth of what is possible on today's Internet.
+Although they are just three examples, sending email, downloading web
+pages, and participating in a videoconference demonstrate the
+diversity of applications that can be built on top of the Internet and
+hint at the complexity of the Internet's design. Later in the book we
+will develop a more complete taxonomy of application types to help
+guide our discussion of key design decisions as we seek to build,
+operate, and use networks that such a wide range of applications. The
+book concludes by revisiting these two specific applications, as well
+as several others that illustrate the breadth of what is possible on
+today's Internet.
 
 For now, this quick look at a few typical applications will suffice to
 enable us to start looking at the problems that must be addressed if we
@@ -164,23 +165,30 @@ model, this book addresses the challenge of scalability.
 
 To understand the requirements of connectivity more fully, we need to
 take a closer look at how computers are connected in a network.
-Connectivity occurs at many different levels. At the lowest level, a
-network can consist of two or more computers directly connected by some
-physical medium, such as a coaxial cable or an optical fiber. We call
-such a physical medium a *link*, and we often refer to the computers it
-connects as *nodes*. (Sometimes a node is a more specialized piece of
-hardware rather than a computer, but we overlook that distinction for
-the purposes of this discussion.) As illustrated in :numref:`Figure %s
-<fig-direct>`, physical links are sometimes limited to a pair of nodes
-(such a link is said to be *point-to-point*), while in other cases more
-than two nodes may share a single physical link (such a link is said to
-be *multiple-access*). Wireless links, such as those provided by
-cellular networks and Wi-Fi networks, are an important class of
-multiple-access links. It is always the case that multiple-access links
-are limited in size, in terms of both the geographical distance they can
-cover and the number of nodes they can connect. For this reason, they
-often implement the so-called *last mile*, connecting end users to the
-rest of the network.
+Connectivity occurs at many different levels, or said another way,
+connectivity can be provided incrementally, through multiple levels of
+abstraction.
+
+2.2.1 Direct Links
+~~~~~~~~~~~~~~~~~~
+
+At the lowest level, a network can consist of two or more computers
+directly connected by some physical medium, such as a coaxial cable or
+an optical fiber. We call such a physical medium a *link*, and we
+often refer to the computers it connects as *nodes*. (Sometimes a node
+is a more specialized piece of hardware rather than a computer, but we
+overlook that distinction for the purposes of this discussion.) As
+illustrated in :numref:`Figure %s <fig-direct>`, physical links are
+sometimes limited to a pair of nodes (such a link is said to be
+*point-to-point*), while in other cases more than two nodes may share
+a single physical link (such a link is said to be
+*multiple-access*). Wireless links, such as those provided by cellular
+networks and Wi-Fi networks, are an important class of multiple-access
+links. It is always the case that multiple-access links are limited in
+size, in terms of both the geographical distance they can cover and
+the number of nodes they can connect. For this reason, they often
+implement the so-called *last mile*, connecting end users to the rest
+of the network.
 
 .. _fig-direct:
 .. figure:: figures/f01-02-9780123850591.png
@@ -188,6 +196,9 @@ rest of the network.
    :align: center
    
    Direct links: (a) point-to-point; (b) multiple-access.
+
+2.2.2 Packet Switch Networks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If computer networks were limited to situations in which all nodes are
 directly connected to each other over a common physical medium, then
@@ -252,15 +263,10 @@ covered in this book.\ [#]_
 .. [#] The use of clouds to represent networks predates the term
        *cloud computing* by at least a couple of decades, but there an
        increasingly rich connection between these two usages, which
-       we explore in the *Perspective* discussion at the end of each
-       chapter.
+       we explore in the next section.
 
-.. _fig-internet-cloud:
-.. figure:: figures/f01-04-9780123850591.png
-   :width: 500px
-   :align: center
-   
-   Interconnection of networks.
+2.2.3 Federated Internet
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Thousands of networks, of dozens of different types and designs, have
 been built over the years, each owned and operated by a different
@@ -276,6 +282,13 @@ the TCP/IP Internet we all use every day as the capital *I*
 Internet. A node that is connected to two or more networks is commonly
 called a *router* or *gateway*, and it plays much the same role as a
 switch—it forwards messages from one network to another.
+
+.. _fig-internet-cloud:
+.. figure:: figures/f01-04-9780123850591.png
+   :width: 500px
+   :align: center
+   
+   Interconnection of networks.
 
 Note that an internet can itself be viewed as another kind of network,
 which means that an internet can be built from a set of internets.
@@ -326,6 +339,9 @@ addresses.
   each node that is reachable on the network (be it logical or
   physical), and the use of such addresses to forward messages toward
   the appropriate destination node(s). :ref:`[Next] <key-stat-mux>`
+
+2.2.4 Example Network Technologies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 2.3 Cost-Effective Resource Sharing
 ----------------------------------------
@@ -491,30 +507,34 @@ this state, it is said to be *congested*.
   the key challenges of statistical multiplexing. :ref:`[Next]
   <key-semantic-gap>`
 
-2.4 Support for Common Services
------------------------------------
+Need to mention *best-effort* in here some place...
+
+2.4 Support for Application Developers
+--------------------------------------
 
 The discussion up this this point focuses on the challenges providing
 cost-effective connectivity among a group of hosts, but it is overly
 simplistic to view a computer network as simply delivering packets
 among a collection of computers. It is more accurate to think of a
 network as providing the means for a set of application processes that
-are distributed over those computers to communicate. In other words,
-the next requirement of a computer network is that the application
-programs running on the hosts connected to the network must be able to
-communicate in a meaningful way. From the application developer’s
-perspective, the network needs to make his or her life easier.
+are distributed over those computers to communicate with each other to
+implement some application (with email, web surfing, and video being
+examples we know we want to support).
 
-When two application programs need to communicate with each other, a lot
-of complicated things must happen beyond simply sending a message from
-one host to another. One option would be for application designers to
-build all that complicated functionality into each application program.
-However, since many applications need common services, it is much more
-logical to implement those common services once and then to let the
-application designer build the application using those services. The
-challenge for a network designer is to identify the right set of common
-services. The goal is to hide the complexity of the network from the
-application without overly constraining the application designer.
+The requirement is that the network provide application developers
+with powerful, easy-to-use communication abstractions, shielding them
+from the low-level details, limitations, and failures of host-to-host
+packet delivery. The alternative would be for every application
+developer to build all the necessary functionality for themselves,
+effectively reinventing the wheel over and over again.
+
+Fortunately, because many applications have similar needs, it is much
+more logical to implement those common services once and then to let
+the application designer build the application using them. The
+challenge for a network designer is to identify the right set of
+common services.  The goal is to hide the complexity of the network
+from the application without overly constraining the application
+designer.
 
 .. _fig-channel:
 .. figure:: figures/f01-07-9780123850591.png
@@ -536,10 +556,80 @@ applications, so that a sending application can put data in one end and
 expect that data to be delivered by the network to the application at
 the other end of the pipe.
 
-Like any abstraction, logical process-to-process channels are
-implemented on top of a collection of physical host-to-host
-channels. This is the essense of layering, the cornerstone of network
-architectures discussed in the next section.
+2.4.1 Semantic Gap
+~~~~~~~~~~~~~~~~~~
+
+The challenge is to develop algorithms that turn the less-than-perfect
+properties of the underlying network into the high level of service
+required by application programs. Two forces shape the design of these
+so called *end-to-end* communication servcies (abstations). From
+above, the application-level processes that use its services have
+certain requirements. The following list itemizes some of the common
+properties that a transport protocol can be expected to provide:
+
+-  Guarantees message delivery
+
+-  Delivers messages in the same order they are sent
+
+-  Delivers at most one copy of each message
+
+-  Supports arbitrarily large messages
+
+-  Supports synchronization between the sender and the receiver
+
+-  Allows the receiver to apply flow control to the sender
+
+-  Supports multiple application processes on each host
+
+Note that this list does not include all the functionality that
+application processes might want from the network. For example, it
+does not include security features like authentication or encryption,
+so in reality the network provides a collection of abstract
+end-to-end communication services, but for now let's focus on
+issues apart from secrity (which we deal with separately in a later section).
+
+From below, the underlying network upon which the end-to-end
+communication service operates has certain limitations in the level of
+service it can provide.  Some of the more typical limitations of the
+network are that it may
+
+-  Drop messages
+
+-  Reorder messages
+
+-  Deliver duplicate copies of a given message
+
+-  Limit messages to some finite size
+
+-  Deliver messages after an arbitrarily long delay
+
+Such a network is said to provide a *best-effort* level of service, as
+exemplified by the Internet.
+
+The challenge, therefore, is to develop algorithms that turn the
+less-than-perfect properties of the underlying network into the high
+level of service required by application programs.
+
+.. _key-semantic-gap:
+.. admonition:: Key Takeaway
+
+   The key idea to take away from this discussion is that defining
+   useful channels involves both understanding the applications’
+   requirements and recognizing the limitations of the underlying
+   technology. The challenge is to fill in the gap between what the
+   application expects and what the underlying technology can provide.
+   This is sometimes called the *semantic gap.*
+
+
+2.4.2 Common Communication Patterns
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Unfortunately, this is not a one-size-fits-all situation. Some
+applications need a guarantee that all data is delivered, even if it
+means waiting to retransmit a packet that the network dropped, while
+others prefer missing an occasional message over the delay incurred by
+a retransmission. This leads to a suite of end-to-end communication
+abstractions, each tailored for a particular class of applications.
 
 The challenge is to recognize what functionality the channels should
 provide to application programs. For example, does the application
@@ -553,9 +643,6 @@ general, a network provides a variety of different types of channels,
 with each application selecting the type that best meets its needs. The
 rest of this section illustrates the thinking involved in defining
 useful channels.
-
-2.4.1 Identify Common Communication Patterns
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Designing abstract channels involves first understanding the
 communication needs of a representative collection of applications, then
@@ -648,8 +735,8 @@ handsets). We will see this question of how various network services are
 partitioned between the packet switches and the end hosts (devices) as a
 recurring issue in network design.
 
-2.4.2 Reliable Message Delivery
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2.4.3 Reliable Message Delivery
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As suggested by the examples just considered, reliable message delivery
 is one of the most important functions that a network can provide. It is
@@ -712,16 +799,8 @@ failed computer and one that is merely slow or, in the case of a link,
 between one that has been cut and one that is very flaky and therefore
 introducing a high number of bit errors.
 
-.. _key-semantic-gap:
-.. admonition:: Key Takeaway
-
-   The key idea to take away from this discussion is that defining
-   useful channels involves both understanding the applications’
-   requirements and recognizing the limitations of the underlying
-   technology. The challenge is to fill in the gap between what the
-   application expects and what the underlying technology can provide.
-   This is sometimes called the *semantic gap.*  :ref:`[Next]
-   <key-hourglass>`
+2.4.4 Example End-to-End Abstractions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 2.5 Security
 --------------

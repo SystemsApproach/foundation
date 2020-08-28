@@ -44,6 +44,17 @@ architecture* that identifies the available hardware and software
 components and shows how they can be arranged to form a complete network
 system.
 
+At each step, we will use today’s protocols to illustrate various
+design choices available to us, but we will not accept these existing
+artifacts as gospel. Instead, we will be asking (and answering) the
+question of *why* networks are designed the way they are. While it is
+tempting to settle for just understanding the way it’s done today, it
+is important to recognize the underlying concepts because networks are
+constantly changing as technology evolves and new applications are
+invented. It is our experience that once you understand the
+fundamental ideas, any new protocol that you are confronted with will
+be relatively easy to digest.
+
 In addition to understanding how networks are built, it is increasingly
 important to understand how they are operated or managed and how network
 applications are developed. Almost all of us now have computer networks
