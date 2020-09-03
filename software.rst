@@ -348,8 +348,27 @@ out the characters that arrive on the connection.
      }
    }
 
-4.2 Software-Defined Networks
------------------------------
+4.2 Hardware Building Blocks
+----------------------------
+
+If the "top side" of the Internet is defined by the API developers use
+to create new applications, its "bottom side" is defined by the
+harware building blocks used to construct the network from the ground
+up.
+
+The early days of the Internet were notable not only for the
+proliferation of applications, but also the introduction of new
+networking technologies. The genius of IP was that it allowed for any
+underlying network technology (including two tin cans connected by a
+piece of string), and that's exactly what happened. (Cause and effect
+isn't quite right here.) But while applications continued to multiply,
+the underlying networking technologies consolidated, to the point that
+today the hardware building blocks have essentially become commodity
+(much like servers in the computing realm).
+
+Describe switches... and the exceptions (RAN)...
+
+But what about the software... SDN + switch/nic/kernel/userspace....
 
 The socket API supports applications written on top of the network,
 but what about the implementation of the network itself? Part of this
@@ -389,8 +408,8 @@ language rather using than a general-purpose lanuage like Java or
 Python. This is all part of a emerging trend called *Software-Defined
 Networks (SDN)*, which we describe in a companion book.
 
-4.3 Cloud is the New Internet
------------------------------
+4.3 The Cloud and the Internet
+--------------------------------------------
 
 There has recently been a migration of traditional Internet
 applications like email and web servers from machines running

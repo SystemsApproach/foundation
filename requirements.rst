@@ -10,38 +10,84 @@ are our requirements?*
 
 Any systems-oriented discussion of requirements starts with the
 *-ities:* reliability, scalability, availability, scalability,
-security, manageability, and so on. These are all requirements of the
-network we want to build, but it's not always helpful to simply state
-the obvious. Our goal in this chapter is frame the discussion of
-requirements to the particular system we are trying to build. In doing
-so, we will touch on all the -ities, but in a way that brings the most
-important factors into sharper focus.
+useability, security, manageability, and so on. These are all
+requirements of the network we want to build, but it's not
+particularly helpful to simply state the obvious. Our goal in this
+chapter is frame the discussion of requirements to the particular
+system we are trying to build. In doing so, we will touch on all the
+-ities, but in a way that brings the most important factors into
+sharper focus.
 
 2.1 Generality
 -------------------
 
-Most people know the Internet through its applications: the World Wide
-Web, email, social media, streaming music or movies,
-videoconferencing, instant messaging, file-sharing, to name just a few
-examples. The most important statement we can make about these
-applications is that they know no bound. The Internet is a "universial
-communications platform" that enables a wide-range of applications. It
-was not purpose-built to support just one application, such as making
-voice calls or watching TV.
+Most people know the Internet through its applications: web browsing,
+email, social media, streaming music or movies, videoconferencing,
+instant messaging, and file-sharing, to name just a few. The most
+important statement we can make about these applications is that they
+know no bound. The Internet is a "universial communications platform"
+that enables a wide-range of applications. Unlike networks that came
+before it, the Internet was not purpose-built to support just one
+application, such as making voice calls or watching TV.
 
-We take it for granted today, but generality is the first and most
-important requirement for the network we hope to build. This is an
-easy point to make, but has much a deeper implication, which is best
-understood by a closer look at the popular applications that run on it
-today. In practice, identifying a representative set of applications
-you want to support---we sometimes call these *use cases*---is a
-necessary first step for any system you want to build. We have the
-luxury of nearly forty years of hard-earned experience building
-applications on the Internet, but for illustrative purposes, let's
-suppose we decide we want to (minimally) support email, web surfing
-and video streaming.
+We take it for granted today, but generality is the foremost
+requirement for the network we are building. This is an easy claim to
+make, but has deeper implications that are best understood by a closer
+look at applications in use today. In practice, identifying a
+representative set of applications you want to support—these are
+sometimes call *use cases*—is a necessary first step for any system
+you want to build. We have the luxury of 30+ years of hard-earned
+experience building Internet applications, but for illustrative
+purposes, let's suppose we decide we want to (minimally) support the
+following three services: email, web surfing and video streaming.
 
-Start with email...
+.. sidebar:: Killer Apps
+
+	We are approaching this discussion as a design exercise, but
+	of course with 20/20 hindsight. Our history of predicting what
+	will and won't be a popular application is not very
+	impressive, but you have to start somewhere. In the early days
+	of the Internet, there were three main apps (use cases).
+
+	The main application justifying the investment in building the
+	Internet was support for logging into remote computers, which
+	were scarce at the time. Today, remote login—now typically
+	done using SSH—is primarily the domain of network
+	administrators who need to access a machine for diagnostic or
+	operational purposes.
+
+	Another early application was file transfer, which continues
+	today, but looks much different than the original FTP. We now
+	store our files in Dropbox or Google Drive, but that's just a
+	better user interface. Under the covers, files of various
+	sizes and content, organized into a hierarchical collection of
+	folders, are moved between local machines (our laptops) and
+	remote storage servers (the cloud).
+
+	The third main application of the original Internet was email,
+	which we briefly describe in this section. Noticably absent
+	were any audio or video streaming applications. At the time,
+	one limiting factor was that computers connected to the
+	Internet were not powerful enough to encode/decode multimedia
+	streams, nor did they have the necessary graphical displays.
+	In many ways, it's been advances in computing and graphics
+	that has spurred the development of new Internet apps. But
+	dispite this blind spot, the Internet was designed with enough
+	foresight to be able to evolve to support them.
+	     
+
+2.1.1 Email
+~~~~~~~~~~~
+
+Start with email... (a) name people, (b) rendez-vous/asynchronous delivery, (c)
+arbitrary sized messages (may include attachements).
+
+2.1.2 Web Browsing
+~~~~~~~~~~~~~~~~~~
+
+(a) uniquely name/identify objects, (b) arbitrary-sized, (c) arbitrary
+    types, (d) get (and put) operations... REST? Relationship to
+    Facebook and Phone Apps About history of hypertext and Bush.
 
 The World Wide Web is the Internet application that catapulted the
 Internet from a somewhat obscure tool used mostly by scientists and
@@ -52,12 +98,12 @@ application.
 
 In its basic form, the Web presents an intuitively simple interface.
 Users view pages full of textual and graphical objects and click on
-objects that they want to learn more about, and a corresponding new page
-appears. Most people are also aware that just under the covers each
-selectable object on a page is bound to an identifier for the next page
-or object to be viewed. This identifier, called a Uniform Resource
-Locator (URL), provides a way of identifying all the possible objects
-that can be viewed from your web browser. For example,
+objects that they want to learn more about, and a corresponding new
+page appears. We clearly need a way to name (identify) the objects we
+want to download, and as most people are aware, today this identifier
+is called a Uniform Resource Locator (URL), and they provide a way of
+uniquely identifying all the possible objects that can be viewed from
+your web browser. For example,
 
 .. code-block:: html
 
@@ -70,16 +116,22 @@ Protocol (HTTP) should be used to download the page,
 page, and ``/llp/index.html`` uniquely identifies Larrys home page at
 this site.
 
-Another widespread application class of the Internet is the delivery of
-"streaming" audio and video. Services such as video on demand and
-Internet radio use this technology. While we frequently start at a
-website to initiate a streaming session, the delivery of audio and video
-has some important differences from fetching a simple web page of text
-and images. For example, you often don't want to download an entire
-video file—a process that might take a few minutes—before watching the
-first scene. Streaming audio and video implies a more timely transfer of
-messages from sender to receiver, and the receiver displays the video or
-plays the audio pretty much as it arrives.
+Mabye generalize to web services... cloud services (perhaps hint at it
+and revisit in Implementation section).
+
+2.1.3 Audio/Video Streaming
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A third widespread application class is the delivery of "streaming"
+audio and video. Services such as video on demand and Internet radio
+use this technology. While we frequently start at a website to
+initiate a streaming session, the delivery of audio and video has some
+important differences from fetching a simple web page of text and
+images. For example, you often don't want to download an entire video
+file—a process that might take a few minutes—before watching the first
+scene. Streaming audio and video implies a more timely transfer of
+messages from sender to receiver, and the receiver displays the video
+or plays the audio pretty much as it arrives.
 
 Note that the difference between streaming applications and the more
 traditional delivery of text, graphics, and images is that humans
@@ -145,6 +197,13 @@ For now, this quick look at a few typical applications will suffice to
 enable us to start looking at the problems that must be addressed if we
 are to build a network that supports such application diversity.
 
+2.1.4 Design Lessons
+
+What are some of the takeaways that have done us in good stead? Don't
+restrict data types (decouple)... Separation of concerns: inside vs
+outside (on top of) the network. Avoid baking assumptions into the
+network.
+
 2.2 Scalable Connectivity 
 ----------------------------
 
@@ -153,21 +212,21 @@ among a set of computers. The more we can scale the network to include
 more and more computers, devices, and ultimately people, the more
 powerful it will be. This is the idea behind the term "network effect."
 
-Certainly, it is sometimes enough to build a limited network that
-connects only a few select machines. In fact, for reasons of privacy
-and security, many private (corporate) networks have the explicit goal
-of limiting the set of machines that are connected. In contrast, other
-networks (of which the Internet is the prime example) are designed to
-grow in a way that allows them the potential to connect all the
-computers in the world. A system that is designed to support growth to
-an arbitrarily large size is said to *scale*. Using the Internet as a
-model, this book addresses the challenge of scalability.
+It can be enough to build a limited network that connects only a few
+select machines. In fact, for reasons of privacy and security, many
+private (corporate) networks have the explicit goal of limiting the
+set of machines that are connected. In contrast, other networks (of
+which the Internet is the prime example) are designed to grow in a way
+that allows them the potential to connect all the computers in the
+world. A system that is designed to support growth to an arbitrarily
+large size is said to *scale*. Using the Internet as a model, this
+book addresses the challenge of scalability.
 
 To understand the requirements of connectivity more fully, we need to
-take a closer look at how computers are connected in a network.
-Connectivity occurs at many different levels, or said another way,
-connectivity can be provided incrementally, through multiple levels of
-abstraction.
+take a closer look at possible ways to interconnect computers, keeping
+in mind that connectivity occurs at many different levels. Said
+another way, connectivity can be provided incrementally, through
+multiple levels of abstraction.
 
 2.2.1 Direct Links
 ~~~~~~~~~~~~~~~~~~
@@ -207,8 +266,8 @@ could connect, or the number of wires coming out of the back of each
 node would quickly become both unmanageable and very expensive.
 Fortunately, connectivity between two nodes does not necessarily imply a
 direct physical connection between them—indirect connectivity may be
-achieved among a set of cooperating nodes. Consider the following two
-examples of how a collection of computers can be indirectly connected.
+achieved among a set of cooperating nodes. Consider the following
+example of how a collection of computers can be indirectly connected.
 
 :numref:`Figure %s <fig-psn>` shows a pair of shows a set of nodes,
 each of which is attached to one or more point-to-point links. Those
@@ -390,41 +449,42 @@ supply of data that it wants to send to its counterpart on the right.
    Multiplexing multiple logical flows over a single
    physical link.
 
-There are several different methods for multiplexing multiple flows onto
-one physical link. One common method is *synchronous time-division
-multiplexing* (STDM). The idea of STDM is to divide time into
+There are several different methods for multiplexing multiple flows
+onto one physical link. One common method is *time-division
+multiplexing* (TDM). The idea of TDM is to divide time into
 equal-sized quanta and, in a round-robin fashion, give each flow a
 chance to send its data over the physical link. In other words, during
 time quantum 1, data from S1 to R1 is transmitted; during time quantum
-2, data from S2 to R2 is transmitted; in quantum 3, S3 sends data to R3.
-At this point, the first flow (S1 to R1) gets to go again, and the
-process repeats. Another method is *frequency-division multiplexing*
-(FDM). The idea of FDM is to transmit each flow over the physical link
-at a different frequency, much the same way that the signals for
-different TV stations are transmitted at a different frequency over the
-airwaves or on a coaxial cable TV link.
+2, data from S2 to R2 is transmitted; in quantum 3, S3 sends data to
+R3.  At this point, the first flow (S1 to R1) gets to go again, and
+the process repeats. Another method is *frequency-division
+multiplexing* (FDM). The idea of FDM is to transmit each flow over the
+physical link at a different frequency, much the same way that the
+signals for different TV stations are transmitted at a different
+frequency over the airwaves or on a coaxial cable TV link.
 
-Although simple to understand, both STDM and FDM are limited in two
-ways. First, if one of the flows (host pairs) does not have any data to
-send, its share of the physical link—that is, its time quantum or its
-frequency—remains idle, even if one of the other flows has data to
+Although simple to understand, both TDM and FDM are limited in two
+ways. First, if one of the flows (host pairs) does not have any data
+to send, its share of the physical link—that is, its time quantum or
+its frequency—remains idle, even if one of the other flows has data to
 transmit. For example, S3 had to wait its turn behind S1 and S2 in the
-previous paragraph, even if S1 and S2 had nothing to send. For computer
-communication, the amount of time that a link is idle can be very
-large—for example, consider the amount of time you spend reading a web
-page (leaving the link idle) compared to the time you spend fetching the
-page. Second, both STDM and FDM are limited to situations in which the
-maximum number of flows is fixed and known ahead of time. It is not
-practical to resize the quantum or to add additional quanta in the case
-of STDM or to add new frequencies in the case of FDM.
+previous paragraph, even if S1 and S2 had nothing to send. For
+computer communication, the amount of time that a link is idle can be
+very large—for example, consider the amount of time you spend reading
+a web page (leaving the link idle) compared to the time you spend
+fetching the page. Second, both TDM and FDM are limited to situations
+in which the maximum number of flows is fixed and known ahead of
+time. It is not practical to resize the quantum or to add additional
+quanta in the case of TDM or to add new frequencies in the case of
+FDM.
 
 The form of multiplexing that addresses these shortcomings, and of which
 we make most use in this book, is called *statistical multiplexing*.
 Although the name is not all that helpful for understanding the concept,
 statistical multiplexing is really quite simple, with two key ideas.
-First, it is like STDM in that the physical link is shared over
+First, it is like TDM in that the physical link is shared over
 time—first data from one flow is transmitted over the physical link,
-then data from another flow is transmitted, and so on. Unlike STDM,
+then data from another flow is transmitted, and so on. Unlike TDM,
 however, data is transmitted from each flow on demand rather than during
 a predetermined time slot. Thus, if only one flow has data to send, it
 gets to transmit that data without waiting for its quantum to come
@@ -509,6 +569,8 @@ this state, it is said to be *congested*.
 
 Need to mention *best-effort* in here some place...
 
+Is there anything in Ch6 to include here?
+
 2.4 Support for Application Developers
 --------------------------------------
 
@@ -529,7 +591,7 @@ developer to build all the necessary functionality for themselves,
 effectively reinventing the wheel over and over again.
 
 Fortunately, because many applications have similar needs, it is much
-more logical to implement those common services once and then to let
+more logical to implement those common services once, and then to let
 the application designer build the application using them. The
 challenge for a network designer is to identify the right set of
 common services.  The goal is to hide the complexity of the network
@@ -556,13 +618,15 @@ applications, so that a sending application can put data in one end and
 expect that data to be delivered by the network to the application at
 the other end of the pipe.
 
+Multi-dimensional: how name, how secure, how format, how make reliable...
+
 2.4.1 Semantic Gap
 ~~~~~~~~~~~~~~~~~~
 
 The challenge is to develop algorithms that turn the less-than-perfect
 properties of the underlying network into the high level of service
 required by application programs. Two forces shape the design of these
-so called *end-to-end* communication servcies (abstations). From
+so called *end-to-end* communication servcies (abstractions). From
 above, the application-level processes that use its services have
 certain requirements. The following list itemizes some of the common
 properties that a transport protocol can be expected to provide:
@@ -581,12 +645,16 @@ properties that a transport protocol can be expected to provide:
 
 -  Supports multiple application processes on each host
 
+-  Identify end-points with human readable names   
+
 Note that this list does not include all the functionality that
 application processes might want from the network. For example, it
 does not include security features like authentication or encryption,
 so in reality the network provides a collection of abstract
 end-to-end communication services, but for now let's focus on
-issues apart from secrity (which we deal with separately in a later section).
+issues apart from secrity (which we deal with separately in a later
+section). It also doesn't address how processes identify each other
+and name the resources they want to access...
 
 From below, the underlying network upon which the end-to-end
 communication service operates has certain limitations in the level of
@@ -602,6 +670,8 @@ network are that it may
 -  Limit messages to some finite size
 
 -  Deliver messages after an arbitrarily long delay
+
+-  Identify end-points with machine-optimized addresses 
 
 Such a network is said to provide a *best-effort* level of service, as
 exemplified by the Internet.

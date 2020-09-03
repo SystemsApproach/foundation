@@ -21,8 +21,8 @@ introduces two of the most historically important architectures—the
 OSI (or 7-layer) architecture and the Internet architecture—as well as
 the defacto cloud architecture that is in wide-spread use today.
 
-3.1 Layering and Protocols
--------------------------------
+3.1 Layering
+------------
 
 Abstraction—the hiding of implementation details behind a well-defined
 interface—is the fundamental tool used by system designers to manage
@@ -88,6 +88,9 @@ as illustrated in :numref:`Figure %s <fig-layers2>`.
    
    Layered system with alternative abstractions available
    at a given layer.
+
+3.1.1 Protocols
+~~~~~~~~~~~~~~~
 
 Using this discussion of layering as a foundation, we are now ready to
 discuss the architecture of a network more precisely. For starters, the
@@ -196,8 +199,68 @@ in their respective architectures. We briefly describe the architectures
 defined by the IETF and ISO shortly, but first there are two additional
 things we need to explain about the mechanics of protocol layering.
 
+3.1.2 Encapsulation
+~~~~~~~~~~~~~~~~~~~
+
+Consider what happens in when one of the application programs sends a
+message to its peer by passing the message to RRP. From RRP’s
+perspective, the message it is given by the application is an
+uninterpreted string of bytes. RRP does not care that these bytes
+represent an array of integers, an email message, a digital image, or
+whatever; it is simply charged with sending them to its peer. However,
+RRP must communicate control information to its peer, instructing it how
+to handle the message when it is received. RRP does this by attaching a
+*header* to the message. Generally speaking, a header is a small data
+structure—from a few bytes to a few dozen bytes—that is used among peers
+to communicate with each other. As the name suggests, headers are
+usually attached to the front of a message. In some cases, however, this
+peer-to-peer control information is sent at the end of the message, in
+which case it is called a *trailer*. The exact format for the header
+attached by RRP is defined by its protocol specification. The rest of
+the message—that is, the data being transmitted on behalf of the
+application—is called the message’s *body* or *payload*. We say that the
+application’s data is *encapsulated* in the new message created by RRP.
+
+.. _fig-encapsulation:
+.. figure:: figures/f01-12-9780123850591.png
+   :width: 500px
+   :align: center
+   
+   High-level messages are encapsulated inside of low-level messages.
+
+This process of encapsulation is then repeated at each level of the
+protocol graph; for example, HHP encapsulates RRP’s message by
+attaching a header of its own. If we now assume that HHP sends the
+message to its peer over some network, then when the message arrives
+at the destination host, it is processed in the opposite order: HHP
+first interprets the HHP header at the front of the message (i.e.,
+takes whatever action is appropriate given the contents of the header)
+and passes the body of the message (but not the HHP header) up to RRP,
+which takes whatever action is indicated by the RRP header that its
+peer attached and passes the body of the message (but not the RRP
+header) up to the application program. The message passed up from RRP
+to the application on host 2 is exactly the same message as the
+application passed down to RRP on host 1; the application does not see
+any of the headers that have been attached to it to implement the
+lower-level communication services. This whole process is illustrated
+in :numref:`Figure %s <fig-encapsulation>`. Note that in this example,
+nodes in the network (e.g., switches and routers) may inspect the HHP
+header at the front of the message.
+
+Note that when we say a low-level protocol does not interpret the
+message it is given by some high-level protocol, we mean that it does
+not know how to extract any meaning from the data contained in the
+message. It is sometimes the case, however, that the low-level protocol
+applies some simple transformation to the data it is given, such as to
+compress or encrypt it. In this case, the protocol is transforming the
+entire body of the message, including both the original application’s
+data and all the headers attached to that data by higher-level
+protocols.
+
 3.2 Virtualization
 ------------------
+
+Virtualization as a special kind of "recursive" layering...
 
 For almost as long as there have been packet-switched networks, there
 have been ideas about how to virtualize them, starting with virtual
@@ -304,64 +367,6 @@ in the next decade, and while some of this work will undoubtedly happen
 in proprietary settings, there are open source network virtualization
 platforms (e.g., the Linux Foundation’s *Tungsten Fabric* project)
 leading the way.
-
-3.3 Encapsulation
------------------
-
-Consider what happens in when one of the application programs sends a
-message to its peer by passing the message to RRP. From RRP’s
-perspective, the message it is given by the application is an
-uninterpreted string of bytes. RRP does not care that these bytes
-represent an array of integers, an email message, a digital image, or
-whatever; it is simply charged with sending them to its peer. However,
-RRP must communicate control information to its peer, instructing it how
-to handle the message when it is received. RRP does this by attaching a
-*header* to the message. Generally speaking, a header is a small data
-structure—from a few bytes to a few dozen bytes—that is used among peers
-to communicate with each other. As the name suggests, headers are
-usually attached to the front of a message. In some cases, however, this
-peer-to-peer control information is sent at the end of the message, in
-which case it is called a *trailer*. The exact format for the header
-attached by RRP is defined by its protocol specification. The rest of
-the message—that is, the data being transmitted on behalf of the
-application—is called the message’s *body* or *payload*. We say that the
-application’s data is *encapsulated* in the new message created by RRP.
-
-.. _fig-encapsulation:
-.. figure:: figures/f01-12-9780123850591.png
-   :width: 500px
-   :align: center
-   
-   High-level messages are encapsulated inside of low-level messages.
-
-This process of encapsulation is then repeated at each level of the
-protocol graph; for example, HHP encapsulates RRP’s message by
-attaching a header of its own. If we now assume that HHP sends the
-message to its peer over some network, then when the message arrives
-at the destination host, it is processed in the opposite order: HHP
-first interprets the HHP header at the front of the message (i.e.,
-takes whatever action is appropriate given the contents of the header)
-and passes the body of the message (but not the HHP header) up to RRP,
-which takes whatever action is indicated by the RRP header that its
-peer attached and passes the body of the message (but not the RRP
-header) up to the application program. The message passed up from RRP
-to the application on host 2 is exactly the same message as the
-application passed down to RRP on host 1; the application does not see
-any of the headers that have been attached to it to implement the
-lower-level communication services. This whole process is illustrated
-in :numref:`Figure %s <fig-encapsulation>`. Note that in this example,
-nodes in the network (e.g., switches and routers) may inspect the HHP
-header at the front of the message.
-
-Note that when we say a low-level protocol does not interpret the
-message it is given by some high-level protocol, we mean that it does
-not know how to extract any meaning from the data contained in the
-message. It is sometimes the case, however, that the low-level protocol
-applies some simple transformation to the data it is given, such as to
-compress or encrypt it. In this case, the protocol is transforming the
-entire body of the message, including both the original application’s
-data and all the headers attached to that data by higher-level
-protocols.
 
 3.4 Reference Architectures
 ---------------------------
